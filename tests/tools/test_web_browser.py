@@ -46,9 +46,7 @@ def test_web_browser_navigation():
                 ModelOutput.for_tool_call(
                     model="mockllm/model",
                     tool_name="web_browser_go",
-                    tool_arguments={
-                        "url": "https://inspect.ai-safety-institute.org.uk/"
-                    },
+                    tool_arguments={"url": "https://inspect.ai-security-institute.uk/"},
                 ),
                 ModelOutput.for_tool_call(
                     model="mockllm/model",
@@ -74,7 +72,7 @@ def test_web_browser_navigation():
 
     def is_inspect_website(page: str) -> bool:
         return (
-            'RootWebArea "Inspect" [focused: True, url: https://inspect.ai-safety-institute.org.uk/]'
+            'RootWebArea "Inspect" [focused: True, url: https://inspect.ai-security-institute.uk/]'
             in page
         )
 
@@ -109,7 +107,7 @@ def test_web_browser_click():
     task = Task(
         dataset=[
             Sample(
-                input="Please use the web browser tool to navigate to https://inspect.ai-safety-institute.org.uk/. Then, once there, use the web_browser_click tool to click the link to the documentation on Solvers."
+                input="Please use the web browser tool to navigate to https://inspect.ai-security-institute.uk/. Then, once there, use the web_browser_click tool to click the link to the documentation on Solvers."
             )
         ],
         solver=[use_tools(web_browser()), generate()],
@@ -132,7 +130,7 @@ def test_web_browser_input():
     task = Task(
         dataset=[
             Sample(
-                input="Please use the web browser tool to navigate to https://inspect.ai-safety-institute.org.uk/. Then, once there, use the page's search interface to search for 'solvers'"
+                input="Please use the web browser tool to navigate to https://inspect.ai-security-institute.uk/. Then, once there, use the page's search interface to search for 'solvers'"
             )
         ],
         solver=[use_tools(web_browser()), generate()],
