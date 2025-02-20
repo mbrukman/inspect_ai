@@ -64360,7 +64360,7 @@ ${events}
             },
             "sample-tools"
           ),
-          evalStatus === "started" && /* @__PURE__ */ jsxRuntimeExports.jsx(
+          evalStatus === "started" && !capabilities2.streamSamples && /* @__PURE__ */ jsxRuntimeExports.jsx(
             ToolButton,
             {
               label: "Refresh",
