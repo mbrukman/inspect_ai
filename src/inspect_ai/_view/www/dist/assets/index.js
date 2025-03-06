@@ -16850,43 +16850,6 @@ self.onmessage = function (e) {
         }
       ) });
     };
-    function debounce$1(func, wait, options2 = {}) {
-      let timeout = null;
-      let context;
-      let args;
-      let result2;
-      let lastCallTime = null;
-      const later = () => {
-        const last = Date.now() - (lastCallTime || 0);
-        if (last < wait && last >= 0) {
-          timeout = setTimeout(later, wait - last);
-        } else {
-          timeout = null;
-          if (!options2.leading) {
-            result2 = func.apply(context, args);
-            if (!timeout) {
-              context = null;
-              args = null;
-            }
-          }
-        }
-      };
-      return function(...callArgs) {
-        context = this;
-        args = callArgs;
-        lastCallTime = Date.now();
-        const callNow = options2.leading && !timeout;
-        if (!timeout) {
-          timeout = setTimeout(later, wait);
-        }
-        if (callNow) {
-          result2 = func.apply(context, args);
-          context = null;
-          args = null;
-        }
-        return result2;
-      };
-    }
     const createStoreImpl = (createState) => {
       let state;
       const listeners = /* @__PURE__ */ new Set();
@@ -18018,7 +17981,9 @@ self.onmessage = function (e) {
       tabs: {
         workspace: kDefaultWorkspaceTab,
         sample: kDefaultSampleTab
-      }
+      },
+      scrollPositions: {},
+      listPositions: {}
     };
     const createAppSlice = (set2, get2, _store) => {
       const slice = {
@@ -18070,6 +18035,28 @@ self.onmessage = function (e) {
           clearSampleTab: () => {
             set2((state) => {
               state.app.tabs.sample = kDefaultSampleTab;
+            });
+          },
+          getScrollPosition: (name2) => {
+            const state = get2();
+            return state.app.scrollPositions[name2];
+          },
+          setScrollPosition: (name2, position) => {
+            set2((state) => {
+              state.app.scrollPositions[name2] = position;
+            });
+          },
+          getListPosition: (name2) => {
+            const state = get2();
+            if (Object.keys(state.app.listPositions).includes(name2)) {
+              return state.app.listPositions[name2];
+            } else {
+              return void 0;
+            }
+          },
+          setListPosition: (name2, position) => {
+            set2((state) => {
+              state.app.listPositions[name2] = position;
             });
           }
         }
@@ -51541,6 +51528,120 @@ Supported expressions:
     const EmptyPanel = ({ children: children2 }) => {
       return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "empty-panel", children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "container", children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { children: children2 }) }) });
     };
+    function debounce$1(func, wait, options2 = {}) {
+      let timeout = null;
+      let context;
+      let args;
+      let result2;
+      let lastCallTime = null;
+      const later = () => {
+        const last = Date.now() - (lastCallTime || 0);
+        if (last < wait && last >= 0) {
+          timeout = setTimeout(later, wait - last);
+        } else {
+          timeout = null;
+          if (!options2.leading) {
+            result2 = func.apply(context, args);
+            if (!timeout) {
+              context = null;
+              args = null;
+            }
+          }
+        }
+      };
+      return function(...callArgs) {
+        context = this;
+        args = callArgs;
+        lastCallTime = Date.now();
+        const callNow = options2.leading && !timeout;
+        if (!timeout) {
+          timeout = setTimeout(later, wait);
+        }
+        if (callNow) {
+          result2 = func.apply(context, args);
+          context = null;
+          args = null;
+        }
+        return result2;
+      };
+    }
+    function useStatefulScrollPosition(elementRef, elementKey, delay = 500, scrollable2 = true) {
+      const getScrollPosition = useStore(
+        (state) => state.appActions.getScrollPosition
+      );
+      const setScrollPosition = useStore(
+        (state) => state.appActions.setScrollPosition
+      );
+      const handleScroll = reactExports.useCallback(
+        debounce$1((e) => {
+          const target2 = e.target;
+          const position = target2.scrollTop;
+          setScrollPosition(elementKey, position);
+        }, delay),
+        [elementKey, setScrollPosition, delay]
+      );
+      const restoreScrollPosition = reactExports.useCallback(() => {
+        const element = elementRef.current;
+        const savedPosition = getScrollPosition(elementKey);
+        if (element && savedPosition !== void 0) {
+          requestAnimationFrame(() => {
+            element.scrollTop = savedPosition;
+            requestAnimationFrame(() => {
+              if (element.scrollTop !== savedPosition) {
+                element.scrollTop = savedPosition;
+              }
+            });
+          });
+        }
+      }, [elementKey, getScrollPosition, elementRef]);
+      reactExports.useEffect(() => {
+        const element = elementRef.current;
+        if (!element || !scrollable2) {
+          return;
+        }
+        const savedPosition = getScrollPosition(elementKey);
+        if (savedPosition !== void 0) {
+          requestAnimationFrame(() => {
+            if (element.scrollTop !== savedPosition) {
+              element.scrollTop = savedPosition;
+            }
+          });
+        }
+        if (element.addEventListener) {
+          element.addEventListener("scroll", handleScroll);
+        }
+        return () => {
+          if (element.removeEventListener) {
+            element.removeEventListener("scroll", handleScroll);
+          }
+        };
+      }, [elementKey, elementRef, handleScroll]);
+      return { restoreScrollPosition };
+    }
+    const useVirtuosoState = (virtuosoRef, elementKey, delay = 500) => {
+      const getListPosition = useStore((state) => state.appActions.getListPosition);
+      const setListPosition = useStore((state) => state.appActions.setListPosition);
+      const handleStateChange = reactExports.useCallback(
+        (state) => {
+          setListPosition(elementKey, state);
+        },
+        [elementKey, setListPosition, delay]
+      );
+      const restoreState = reactExports.useCallback(() => {
+        return getListPosition(elementKey);
+      }, [getListPosition]);
+      const isScrolling = reactExports.useCallback(
+        debounce$1((isScrolling2) => {
+          const element = virtuosoRef.current;
+          if (!element) {
+            return;
+          }
+          element.getState(handleStateChange);
+        }, delay),
+        [setListPosition, handleStateChange]
+      );
+      return { restoreState, isScrolling };
+    };
     const tabs$1 = "_tabs_1qj7d_1";
     const tabContents = "_tabContents_1qj7d_5";
     const scrollable = "_scrollable_1qj7d_10";
@@ -51630,36 +51731,12 @@ Supported expressions:
       scrollable: scrollable2 = true,
       scrollRef,
       className: className2,
-      scrollPosition,
-      setScrollPosition,
       children: children2
     }) => {
       const tabContentsId = computeTabContentsId(id);
       const panelRef = reactExports.useRef(null);
       const tabContentsRef = scrollRef || panelRef;
-      reactExports.useEffect(() => {
-        if (!selected2 || scrollPosition === void 0 || !tabContentsRef.current)
-          return;
-        const observer = new MutationObserver(() => {
-          if (tabContentsRef.current) {
-            tabContentsRef.current.scrollTop = scrollPosition;
-          }
-          observer.disconnect();
-        });
-        observer.observe(tabContentsRef.current, {
-          childList: true,
-          subtree: true
-        });
-        return () => observer.disconnect();
-      }, []);
-      const onScroll = reactExports.useCallback(
-        (e) => {
-          if (setScrollPosition) {
-            setScrollPosition(e.currentTarget.scrollTop);
-          }
-        },
-        [setScrollPosition]
-      );
+      useStatefulScrollPosition(tabContentsRef, tabContentsId, 1e3, scrollable2);
       return /* @__PURE__ */ jsxRuntimeExports.jsx(
         "div",
         {
@@ -51673,7 +51750,6 @@ Supported expressions:
             scrollable2 && moduleStyles.scrollable
           ),
           style: style2,
-          onScroll,
           children: children2
         }
       );
@@ -55233,6 +55309,11 @@ Supported expressions:
     }) => {
       const collapsedMessages = resolveMessages(messages);
       const [followOutput, setFollowOutput] = reactExports.useState(false);
+      const listHandle = reactExports.useRef(null);
+      const { restoreState, isScrolling } = useVirtuosoState(
+        listHandle,
+        "chat-view"
+      );
       const renderRow = (item2, index2) => {
         const number2 = collapsedMessages.length > 1 && numbered ? index2 + 1 : void 0;
         return /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -55249,6 +55330,7 @@ Supported expressions:
       const result2 = /* @__PURE__ */ jsxRuntimeExports.jsx(
         $r,
         {
+          ref: listHandle,
           customScrollParent: (scrollRef == null ? void 0 : scrollRef.current) ? scrollRef.current : void 0,
           style: { height: "100%", width: "100%" },
           data: collapsedMessages,
@@ -55265,7 +55347,9 @@ Supported expressions:
             setFollowOutput(atBottom);
           },
           skipAnimationFrameInResizeObserver: true,
-          className: clsx(styles$H.list, className2)
+          className: clsx(styles$H.list, className2),
+          restoreStateFrom: restoreState(),
+          isScrolling
         }
       );
       return result2;
@@ -63837,12 +63921,17 @@ ${events}
       node,
       first
     };
-    const TranscriptVirtualListComponent = ({ id, eventNodes, scrollRef, transcriptState, setTranscriptState }) => {
+    const TranscriptVirtualListComponent = reactExports.memo(({ id, eventNodes, scrollRef, transcriptState, setTranscriptState }) => {
       const setEventState = reactExports.useCallback(
         (eventId, state) => {
           setTranscriptState({ ...transcriptState, [eventId]: state });
         },
         [transcriptState, setTranscriptState]
+      );
+      const listHandle = reactExports.useRef(null);
+      const { restoreState, isScrolling } = useVirtuosoState(
+        listHandle,
+        "transcript"
       );
       const [followOutput, setFollowOutput] = reactExports.useState(false);
       const renderRow = (item2, index2) => {
@@ -63864,6 +63953,7 @@ ${events}
       return /* @__PURE__ */ jsxRuntimeExports.jsx(
         $r,
         {
+          ref: listHandle,
           customScrollParent: (scrollRef == null ? void 0 : scrollRef.current) ? scrollRef.current : void 0,
           style: { height: "100%", width: "100%" },
           data: eventNodes,
@@ -63880,10 +63970,12 @@ ${events}
             setFollowOutput(atBottom);
           },
           skipAnimationFrameInResizeObserver: true,
-          className: clsx("transcript")
+          className: clsx("transcript"),
+          isScrolling,
+          restoreStateFrom: restoreState()
         }
       );
-    };
+    });
     const TranscriptView = ({
       id,
       events,
@@ -64582,28 +64674,11 @@ ${events}
       visible: visible2,
       onHide,
       showProgress,
-      initialScrollPositionRef,
-      setInitialScrollPosition,
       scrollRef
     }) => {
       const modalFooter = footer2 ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "modal-footer", children: footer2 }) : "";
       const modalRef = reactExports.useRef(null);
       scrollRef = scrollRef || modalRef;
-      reactExports.useEffect(() => {
-        if (scrollRef.current) {
-          setTimeout(() => {
-            if (scrollRef.current && initialScrollPositionRef.current && scrollRef.current.scrollTop !== (initialScrollPositionRef == null ? void 0 : initialScrollPositionRef.current)) {
-              scrollRef.current.scrollTop = initialScrollPositionRef.current;
-            }
-          }, 0);
-        }
-      }, []);
-      const onScroll = reactExports.useCallback(
-        (e) => {
-          setInitialScrollPosition(e.currentTarget.scrollTop);
-        },
-        [setInitialScrollPosition]
-      );
       return /* @__PURE__ */ jsxRuntimeExports.jsx(
         "div",
         {
@@ -64660,7 +64735,7 @@ ${events}
                   )
                 ] }),
                 /* @__PURE__ */ jsxRuntimeExports.jsx(ProgressBar, { animating: showProgress }),
-                /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "modal-body", ref: scrollRef, onScroll, children: children2 }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "modal-body", ref: scrollRef, children: children2 }),
                 modalFooter
               ] })
             }
@@ -64695,11 +64770,10 @@ ${events}
       showingSampleDialog,
       setShowingSampleDialog,
       selectedTab,
-      setSelectedTab,
-      sampleScrollPositionRef,
-      setSampleScrollPosition
+      setSelectedTab
     }) => {
       const scrollRef = reactExports.useRef(null);
+      useStatefulScrollPosition(scrollRef, "sample-dialog");
       const sampleData = useSampleData();
       const logSelection = useLogSelection();
       reactExports.useEffect(() => {
@@ -64761,8 +64835,6 @@ ${events}
           visible: showingSampleDialog,
           onHide,
           showProgress: sampleData.status === "loading",
-          initialScrollPositionRef: sampleScrollPositionRef,
-          setInitialScrollPosition: setSampleScrollPosition,
           scrollRef,
           children: sampleData.error ? /* @__PURE__ */ jsxRuntimeExports.jsx(ErrorPanel, { title: "Sample Error", error: sampleData.error }) : /* @__PURE__ */ jsxRuntimeExports.jsx(
             SampleDisplay,
@@ -65095,6 +65167,10 @@ ${events}
         className: className2,
         listHandle
       } = props;
+      const { restoreState, isScrolling } = useVirtuosoState(
+        listHandle,
+        "sample-list"
+      );
       const selectedSampleIndex = useStore(
         (state) => state.log.selectedSampleIndex
       );
@@ -65226,7 +65302,9 @@ ${events}
             },
             className: clsx(className2),
             onKeyDown: onkeydown,
-            skipAnimationFrameInResizeObserver: true
+            skipAnimationFrameInResizeObserver: true,
+            isScrolling,
+            restoreStateFrom: restoreState()
           }
         ),
         /* @__PURE__ */ jsxRuntimeExports.jsx(SampleFooter, { sampleCount, running: running2 })
@@ -65412,8 +65490,6 @@ ${events}
     };
     const SamplesTab = ({
       running: running2,
-      sampleScrollPositionRef,
-      setSampleScrollPosition,
       sampleTabScrollRef
     }) => {
       var _a2, _b2;
@@ -65547,9 +65623,7 @@ ${events}
               selectedTab: selectedSampleTab,
               setSelectedTab: setSelectedSampleTab,
               nextSample,
-              prevSample: previousSample,
-              sampleScrollPositionRef,
-              setSampleScrollPosition
+              prevSample: previousSample
             }
           ) : void 0
         ] });
@@ -66757,9 +66831,7 @@ ${events}
       status: status2,
       showToggle,
       tabs: tabs2,
-      divRef,
-      workspaceTabScrollPositionRef,
-      setWorkspaceTabScrollPosition
+      divRef
     }) => {
       const selectedTab = useStore((state) => state.app.tabs.workspace);
       const setSelectedTab = useStore((state) => state.appActions.setWorkspaceTab);
@@ -66772,12 +66844,6 @@ ${events}
           }
         },
         [setSelectedTab]
-      );
-      const handleScroll = reactExports.useCallback(
-        debounce$1((tabId, position) => {
-          setWorkspaceTabScrollPosition(tabId, position);
-        }, 100),
-        [setWorkspaceTabScrollPosition]
       );
       if (evalSpec === void 0) {
         return /* @__PURE__ */ jsxRuntimeExports.jsx(EmptyPanel, {});
@@ -66818,7 +66884,6 @@ ${events}
               tabControlsClassName: clsx(styles.tabs, "text-size-smaller"),
               tabPanelsClassName: clsx(styles.tabPanels),
               children: Object.keys(tabs2).map((key2) => {
-                var _a2;
                 const tab2 = tabs2[key2];
                 return /* @__PURE__ */ jsxRuntimeExports.jsx(
                   TabPanel,
@@ -66829,10 +66894,6 @@ ${events}
                     selected: selectedTab === tab2.id,
                     scrollable: !!tab2.scrollable,
                     scrollRef: tab2.scrollRef,
-                    scrollPosition: (_a2 = workspaceTabScrollPositionRef.current) == null ? void 0 : _a2[tab2.id],
-                    setScrollPosition: (position) => {
-                      handleScroll(tab2.id, position);
-                    },
                     children: tab2.content()
                   },
                   tab2.id
@@ -66852,9 +66913,7 @@ ${events}
         evalStats,
         evalResults,
         runningMetrics,
-        showToggle,
-        workspaceTabScrollPositionRef,
-        setWorkspaceTabScrollPosition
+        showToggle
       } = props;
       const divRef = reactExports.useRef(null);
       reactExports.useEffect(() => {
@@ -66877,9 +66936,7 @@ ${events}
           evalStats,
           status: evalStatus,
           tabs: resolvedTabs,
-          showToggle,
-          workspaceTabScrollPositionRef,
-          setWorkspaceTabScrollPosition
+          showToggle
         }
       );
     };
@@ -66903,7 +66960,7 @@ ${events}
         }, 1250);
       }
     };
-    const useSamplesTabConfig = (evalStatus, sampleScrollPositionRef, setSampleScrollPosition, refreshLog, sampleTabScrollRef) => {
+    const useSamplesTabConfig = (evalStatus, refreshLog, sampleTabScrollRef) => {
       const totalSampleCount = useTotalSampleCount();
       const samplesDescriptor = useSampleDescriptor();
       const sampleSummaries = useFilteredSamples();
@@ -66918,8 +66975,6 @@ ${events}
             SamplesTab,
             {
               running: evalStatus === "started",
-              sampleScrollPositionRef,
-              setSampleScrollPosition,
               sampleTabScrollRef
             }
           ),
@@ -66944,8 +66999,6 @@ ${events}
         };
       }, [
         evalStatus,
-        sampleScrollPositionRef,
-        setSampleScrollPosition,
         refreshLog,
         sampleTabScrollRef,
         sampleSummaries,
@@ -67033,8 +67086,6 @@ ${events}
       const {
         evalVersion,
         evalStatus,
-        sampleScrollPositionRef,
-        setSampleScrollPosition,
         evalSpec,
         evalPlan,
         evalResults,
@@ -67045,8 +67096,6 @@ ${events}
       const sampleTabScrollRef = reactExports.useRef(null);
       const samplesTabConfig = useSamplesTabConfig(
         evalStatus,
-        sampleScrollPositionRef,
-        setSampleScrollPosition,
         refreshLog,
         sampleTabScrollRef
       );
@@ -67758,25 +67807,6 @@ ${events}
       const refreshLog = useStore((state) => state.logActions.refreshLog);
       const selectSample = useStore((state) => state.logActions.selectSample);
       const mainAppRef = reactExports.useRef(null);
-      const workspaceTabScrollPosition = reactExports.useRef({});
-      const sampleScrollPosition = reactExports.useRef(0);
-      const setSampleScrollPosition = reactExports.useCallback(
-        debounce$1((position) => {
-          sampleScrollPosition.current = position;
-        }, 1e3),
-        []
-      );
-      const setWorkspaceTabScrollPosition = reactExports.useCallback(
-        debounce$1((tab2, position) => {
-          if (workspaceTabScrollPosition.current[tab2] !== position) {
-            workspaceTabScrollPosition.current = {
-              ...workspaceTabScrollPosition.current,
-              [tab2]: position
-            };
-          }
-        }, 1e3),
-        []
-      );
       reactExports.useEffect(() => {
         const loadSpecificLog = async () => {
           if (selectedLogFile && selectedLogFile !== loadedLogFile) {
@@ -67939,11 +67969,7 @@ ${events}
                   evalResults: filterNull(selectedLogSummary == null ? void 0 : selectedLogSummary.results),
                   runningMetrics,
                   showToggle,
-                  refreshLog: appRefreshLog,
-                  sampleScrollPositionRef: sampleScrollPosition,
-                  setSampleScrollPosition,
-                  workspaceTabScrollPositionRef: workspaceTabScrollPosition,
-                  setWorkspaceTabScrollPosition
+                  refreshLog: appRefreshLog
                 }
               )
             ]
