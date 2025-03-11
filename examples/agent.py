@@ -1,8 +1,8 @@
-from typing import Callable, Generic, Optional, ParamSpec, Protocol, TypeVar
+from typing import Generic, ParamSpec, Protocol, TypeVar
 
-from pydantic import BaseModel, Field
+from pydantic import Field
+
 from inspect_ai._util.content import Content
-from inspect_ai.tool._tool import ToolResult
 from inspect_ai.util._store_model import StoreModel
 
 T = TypeVar("T", bound=StoreModel, contravariant=True)
