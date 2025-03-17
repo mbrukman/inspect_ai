@@ -27703,7 +27703,7 @@ self.onmessage = function (e) {
     const header$2 = "_header_1u82r_23";
     const toggle$1 = "_toggle_1u82r_39";
     const progress = "_progress_1u82r_46";
-    const list$3 = "_list_1u82r_50";
+    const list$2 = "_list_1u82r_50";
     const backdrop = "_backdrop_1u82r_55";
     const active = "_active_1u82r_62";
     const item$2 = "_item_1u82r_66";
@@ -27714,7 +27714,7 @@ self.onmessage = function (e) {
       header: header$2,
       toggle: toggle$1,
       progress,
-      list: list$3,
+      list: list$2,
       backdrop,
       active,
       item: item$2
@@ -32794,7 +32794,7 @@ self.onmessage = function (e) {
         }
       }
     }
-    function list$2(state, startLine, endLine, silent) {
+    function list$1(state, startLine, endLine, silent) {
       let max2, pos2, start, token2;
       let nextLine = startLine;
       let tight = true;
@@ -33406,7 +33406,7 @@ self.onmessage = function (e) {
       ["fence", fence, ["paragraph", "reference", "blockquote", "list"]],
       ["blockquote", blockquote, ["paragraph", "reference", "blockquote", "list"]],
       ["hr", hr, ["paragraph", "reference", "blockquote", "list"]],
-      ["list", list$2, ["paragraph", "reference", "blockquote"]],
+      ["list", list$1, ["paragraph", "reference", "blockquote"]],
       ["reference", reference],
       ["html_block", html_block, ["paragraph", "reference", "blockquote"]],
       ["heading", heading$1, ["paragraph", "reference", "blockquote"]],
@@ -36168,6 +36168,7 @@ self.onmessage = function (e) {
         systemContent.push(...contents2.map(normalizeContent));
       }
       const systemMessage = {
+        id: "sys-message-6815A84B062A",
         role: "system",
         content: systemContent,
         source: "input"
@@ -36199,6 +36200,20 @@ self.onmessage = function (e) {
       } else {
         return content2;
       }
+    };
+    const messagesFromEvents = (runningEvents) => {
+      const messages = /* @__PURE__ */ new Map();
+      runningEvents.filter((e) => e.event === "model").forEach((e) => {
+        for (const m of e.input) {
+          const inputMessage = m;
+          if (!messages.has(inputMessage.id)) {
+            messages.set(inputMessage.id, inputMessage);
+          }
+        }
+        const outputMessage = e.output.choices[0].message;
+        messages.set(outputMessage.id, outputMessage);
+      });
+      return messages.values().toArray();
     };
     const ChatMessage = ({
       id,
@@ -65581,100 +65596,288 @@ Supported expressions:
     function Rn(t2, e, n) {
       return e !== "normal" && !(e != null && e.endsWith("px")) && n(`${t2} was not resolved to pixel value correctly`, e, ht.WARN), e === "normal" ? 0 : parseInt(e != null ? e : "0", 10);
     }
-    const list$1 = "_list_1emnm_1";
+    const container$9 = "_container_1rer0_2";
+    const dotsContainer = "_dotsContainer_1rer0_8";
+    const small = "_small_1rer0_15";
+    const medium = "_medium_1rer0_19";
+    const large = "_large_1rer0_24";
+    const dot = "_dot_1rer0_8";
+    const pulse = "_pulse_1rer0_1";
+    const subtle = "_subtle_1rer0_36";
+    const primary = "_primary_1rer0_40";
+    const visuallyHidden = "_visuallyHidden_1rer0_59";
     const styles$J = {
-      list: list$1
+      container: container$9,
+      dotsContainer,
+      small,
+      medium,
+      large,
+      dot,
+      pulse,
+      subtle,
+      primary,
+      visuallyHidden
     };
-    const ChatViewVirtualList = ({
-      id,
-      messages,
-      toolCallStyle,
-      className: className2,
-      indented: indented2,
-      numbered = true,
-      scrollRef
+    const PulsingDots = ({
+      text: text2 = "Loading...",
+      dotsCount = 3,
+      subtle: subtle2 = true,
+      size = "small"
     }) => {
-      const collapsedMessages = resolveMessages(messages);
-      const [followOutput, setFollowOutput] = useProperty(id, "follow", {
-        defaultValue: false
-      });
+      return /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV(
+        "div",
+        {
+          className: clsx(
+            styles$J.container,
+            size === "small" ? styles$J.small : size === "medium" ? styles$J.medium : styles$J.large
+          ),
+          role: "status",
+          children: [
+            /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("div", { className: styles$J.dotsContainer, children: [...Array(dotsCount)].map((_, index) => /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV(
+              "div",
+              {
+                className: clsx(
+                  styles$J.dot,
+                  subtle2 ? styles$J.subtle : styles$J.primary
+                ),
+                style: { animationDelay: `${index * 0.15}s` }
+              },
+              index,
+              false,
+              {
+                fileName: "/Users/charlesteague/Development/ukgovernmentbeis/inspect_ai/src/inspect_ai/_view/www/src/components/PulsingDots.tsx",
+                lineNumber: 32,
+                columnNumber: 11
+              },
+              void 0
+            )) }, void 0, false, {
+              fileName: "/Users/charlesteague/Development/ukgovernmentbeis/inspect_ai/src/inspect_ai/_view/www/src/components/PulsingDots.tsx",
+              lineNumber: 30,
+              columnNumber: 7
+            }, void 0),
+            /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("span", { className: styles$J.visuallyHidden, children: text2 }, void 0, false, {
+              fileName: "/Users/charlesteague/Development/ukgovernmentbeis/inspect_ai/src/inspect_ai/_view/www/src/components/PulsingDots.tsx",
+              lineNumber: 42,
+              columnNumber: 7
+            }, void 0)
+          ]
+        },
+        void 0,
+        true,
+        {
+          fileName: "/Users/charlesteague/Development/ukgovernmentbeis/inspect_ai/src/inspect_ai/_view/www/src/components/PulsingDots.tsx",
+          lineNumber: 19,
+          columnNumber: 5
+        },
+        void 0
+      );
+    };
+    const progressContainer = "_progressContainer_1cjjr_1";
+    const progressText = "_progressText_1cjjr_9";
+    const styles$I = {
+      progressContainer,
+      progressText
+    };
+    const LiveVirtualList = ({
+      id,
+      className: className2,
+      data,
+      renderRow,
+      scrollRef,
+      live,
+      showProgress
+    }) => {
       const listHandle = reactExports.useRef(null);
       const { getRestoreState, isScrolling } = useVirtuosoState(
         listHandle,
-        `chat-view-${id}`
+        `live-virtual-list-${id}`
       );
-      const renderRow = (index, item2) => {
-        const number2 = collapsedMessages.length > 1 && numbered ? index + 1 : void 0;
-        return /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV(
-          ChatMessageRow,
-          {
-            parentName: id || "chat-virtual-list",
-            number: number2,
-            resolvedMessage: item2,
-            indented: indented2,
-            toolCallStyle
-          },
-          void 0,
-          false,
-          {
-            fileName: "/Users/charlesteague/Development/ukgovernmentbeis/inspect_ai/src/inspect_ai/_view/www/src/samples/chat/ChatViewVirtualList.tsx",
-            lineNumber: 51,
-            columnNumber: 7
-          },
-          void 0
-        );
+      const [followOutput, setFollowOutput] = useProperty(
+        id,
+        "follow",
+        {
+          defaultValue: null
+        }
+      );
+      const isAutoScrollingRef = reactExports.useRef(false);
+      reactExports.useEffect(() => {
+        if (followOutput === null) {
+          setFollowOutput(!!live);
+        }
+      }, []);
+      const prevLive = usePrevious(live);
+      reactExports.useEffect(() => {
+        if (!live && prevLive && followOutput && (scrollRef == null ? void 0 : scrollRef.current)) {
+          setFollowOutput(false);
+          setTimeout(() => {
+            if (scrollRef.current) {
+              scrollRef.current.scrollTo({ top: 0, behavior: "instant" });
+            }
+          }, 100);
+        }
+      }, [live, followOutput]);
+      const handleScroll = useRafThrottle(() => {
+        if (isAutoScrollingRef.current) return;
+        if (!live) return;
+        if ((scrollRef == null ? void 0 : scrollRef.current) && listHandle.current) {
+          const parent = scrollRef.current;
+          const isAtBottom = parent.scrollHeight - parent.scrollTop <= parent.clientHeight + 30;
+          if (isAtBottom && !followOutput) {
+            setFollowOutput(true);
+          } else if (!isAtBottom && followOutput) {
+            setFollowOutput(false);
+          }
+        }
+      }, [setFollowOutput, followOutput, live]);
+      const heightChanged = reactExports.useCallback(
+        (height) => {
+          requestAnimationFrame(() => {
+            var _a2;
+            if (followOutput && live && (scrollRef == null ? void 0 : scrollRef.current)) {
+              isAutoScrollingRef.current = true;
+              (_a2 = listHandle.current) == null ? void 0 : _a2.scrollTo({ top: height });
+              requestAnimationFrame(() => {
+                isAutoScrollingRef.current = false;
+              });
+            }
+          });
+        },
+        [scrollRef, followOutput, live]
+      );
+      reactExports.useEffect(() => {
+        const timer = setTimeout(() => {
+          forceUpdate();
+        }, 0);
+        return () => clearTimeout(timer);
+      }, []);
+      const [, forceRender] = reactExports.useState({});
+      const forceUpdate = reactExports.useCallback(() => forceRender({}), []);
+      const Footer = () => {
+        return showProgress ? /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("div", { className: clsx(styles$I.progressContainer), children: /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV(PulsingDots, { subtle: false, size: "medium" }, void 0, false, {
+          fileName: "/Users/charlesteague/Development/ukgovernmentbeis/inspect_ai/src/inspect_ai/_view/www/src/components/LiveVirtualList.tsx",
+          lineNumber: 144,
+          columnNumber: 9
+        }, void 0) }, void 0, false, {
+          fileName: "/Users/charlesteague/Development/ukgovernmentbeis/inspect_ai/src/inspect_ai/_view/www/src/components/LiveVirtualList.tsx",
+          lineNumber: 143,
+          columnNumber: 7
+        }, void 0) : void 0;
       };
-      const result2 = /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV(
+      reactExports.useEffect(() => {
+        const parent = scrollRef == null ? void 0 : scrollRef.current;
+        if (parent) {
+          parent.addEventListener("scroll", handleScroll);
+          return () => parent.removeEventListener("scroll", handleScroll);
+        }
+      }, [scrollRef, handleScroll]);
+      return /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV(
         $r,
         {
           ref: listHandle,
           customScrollParent: (scrollRef == null ? void 0 : scrollRef.current) ? scrollRef.current : void 0,
           style: { height: "100%", width: "100%" },
-          data: collapsedMessages,
+          data,
+          defaultItemHeight: 250,
           itemContent: renderRow,
           increaseViewportBy: { top: 1e3, bottom: 1e3 },
-          overscan: {
-            main: 10,
-            reverse: 10
-          },
-          followOutput,
-          atBottomStateChange: setFollowOutput,
-          skipAnimationFrameInResizeObserver: true,
-          className: clsx(styles$J.list, className2),
+          overscan: { main: 2, reverse: 2 },
+          className: clsx("transcript", className2),
+          isScrolling,
           restoreStateFrom: getRestoreState(),
-          isScrolling
+          totalListHeightChanged: heightChanged,
+          components: {
+            Footer
+          }
         },
         void 0,
         false,
         {
-          fileName: "/Users/charlesteague/Development/ukgovernmentbeis/inspect_ai/src/inspect_ai/_view/www/src/samples/chat/ChatViewVirtualList.tsx",
-          lineNumber: 62,
+          fileName: "/Users/charlesteague/Development/ukgovernmentbeis/inspect_ai/src/inspect_ai/_view/www/src/components/LiveVirtualList.tsx",
+          lineNumber: 159,
           columnNumber: 5
         },
         void 0
       );
-      return result2;
     };
-    const tabPanel = "_tabPanel_1isha_1";
-    const fullWidth = "_fullWidth_1isha_5";
-    const metadataPanel = "_metadataPanel_1isha_9";
-    const padded = "_padded_1isha_18";
-    const ansi = "_ansi_1isha_23";
-    const noTop = "_noTop_1isha_27";
-    const timePanel = "_timePanel_1isha_31";
-    const styles$I = {
+    const ChatViewVirtualList = reactExports.memo(
+      ({
+        id,
+        messages,
+        className: className2,
+        toolCallStyle,
+        indented: indented2,
+        numbered = true,
+        scrollRef,
+        running: running2
+      }) => {
+        const collapsedMessages = reactExports.useMemo(() => {
+          return resolveMessages(messages);
+        }, [messages]);
+        const renderRow = (index, item2) => {
+          const number2 = collapsedMessages.length > 1 && numbered ? index + 1 : void 0;
+          return /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV(
+            ChatMessageRow,
+            {
+              parentName: id || "chat-virtual-list",
+              number: number2,
+              resolvedMessage: item2,
+              indented: indented2,
+              toolCallStyle
+            },
+            void 0,
+            false,
+            {
+              fileName: "/Users/charlesteague/Development/ukgovernmentbeis/inspect_ai/src/inspect_ai/_view/www/src/samples/chat/ChatViewVirtualList.tsx",
+              lineNumber: 43,
+              columnNumber: 9
+            },
+            void 0
+          );
+        };
+        return /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV(
+          LiveVirtualList,
+          {
+            id: "chat-virtual-list",
+            className: className2,
+            scrollRef,
+            data: collapsedMessages,
+            renderRow,
+            live: running2,
+            showProgress: running2 ? "generating..." : void 0
+          },
+          void 0,
+          false,
+          {
+            fileName: "/Users/charlesteague/Development/ukgovernmentbeis/inspect_ai/src/inspect_ai/_view/www/src/samples/chat/ChatViewVirtualList.tsx",
+            lineNumber: 54,
+            columnNumber: 7
+          },
+          void 0
+        );
+      }
+    );
+    const tabPanel = "_tabPanel_cjf1d_1";
+    const fullWidth = "_fullWidth_cjf1d_5";
+    const metadataPanel = "_metadataPanel_cjf1d_9";
+    const padded = "_padded_cjf1d_18";
+    const ansi = "_ansi_cjf1d_23";
+    const noTop = "_noTop_cjf1d_27";
+    const timePanel = "_timePanel_cjf1d_31";
+    const chat = "_chat_cjf1d_39";
+    const styles$H = {
       tabPanel,
       fullWidth,
       metadataPanel,
       padded,
       ansi,
       noTop,
-      timePanel
+      timePanel,
+      chat
     };
     const flatBody = "_flatBody_1uw6w_1";
     const iconSmall$1 = "_iconSmall_1uw6w_9";
     const lineBase = "_lineBase_1uw6w_15";
-    const styles$H = {
+    const styles$G = {
       flatBody,
       iconSmall: iconSmall$1,
       lineBase
@@ -65689,13 +65892,13 @@ Supported expressions:
       return "Error";
     };
     const FlatSampleError = ({ message: message2 }) => {
-      return /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("div", { className: clsx(styles$H.flatBody), children: [
-        /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("i", { className: clsx(ApplicationIcons.error, styles$H.iconSmall) }, void 0, false, {
+      return /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("div", { className: clsx(styles$G.flatBody), children: [
+        /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("i", { className: clsx(ApplicationIcons.error, styles$G.iconSmall) }, void 0, false, {
           fileName: "/Users/charlesteague/Development/ukgovernmentbeis/inspect_ai/src/inspect_ai/_view/www/src/samples/error/FlatSampleErrorView.tsx",
           lineNumber: 17,
           columnNumber: 7
         }, void 0),
-        /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("div", { className: clsx(styles$H.lineBase, "text-truncate"), children: errorType(message2) }, void 0, false, {
+        /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("div", { className: clsx(styles$G.lineBase, "text-truncate"), children: errorType(message2) }, void 0, false, {
           fileName: "/Users/charlesteague/Development/ukgovernmentbeis/inspect_ai/src/inspect_ai/_view/www/src/samples/error/FlatSampleErrorView.tsx",
           lineNumber: 18,
           columnNumber: 7
@@ -65712,7 +65915,7 @@ Supported expressions:
     const centerLabel = "_centerLabel_9qy4e_17";
     const wrap = "_wrap_9qy4e_22";
     const titled = "_titled_9qy4e_26";
-    const styles$G = {
+    const styles$F = {
       target,
       answer,
       grid: grid$3,
@@ -65790,7 +65993,7 @@ Supported expressions:
             MarkdownDiv,
             {
               markdown: arrayToString((fields == null ? void 0 : fields.target) || "none"),
-              className: clsx("no-last-para-padding", styles$G.target)
+              className: clsx("no-last-para-padding", styles$F.target)
             },
             void 0,
             false,
@@ -65812,7 +66015,7 @@ Supported expressions:
             MarkdownDiv,
             {
               markdown: fields.answer,
-              className: clsx("no-last-para-padding", styles$G.answer)
+              className: clsx("no-last-para-padding", styles$F.answer)
             },
             void 0,
             false,
@@ -65864,7 +66067,7 @@ Supported expressions:
         "div",
         {
           id: `sample-heading-${parent_id}`,
-          className: clsx(styles$G.grid, "text-size-base"),
+          className: clsx(styles$F.grid, "text-size-base"),
           style: {
             gridTemplateColumns: `${columns.map((col) => {
               return col.size;
@@ -65879,8 +66082,8 @@ Supported expressions:
                     "text-style-label",
                     "text-style-secondary",
                     "text-size-base",
-                    col.title ? styles$G.titled : void 0,
-                    col.center ? styles$G.centerLabel : void 0
+                    col.title ? styles$F.titled : void 0,
+                    col.center ? styles$F.centerLabel : void 0
                   ),
                   title: col.title,
                   children: col.label
@@ -65900,9 +66103,9 @@ Supported expressions:
                 "div",
                 {
                   className: clsx(
-                    styles$G.wrap,
+                    styles$F.wrap,
                     col.clamp ? "three-line-clamp" : void 0,
-                    col.center ? styles$G.centerLabel : void 0
+                    col.center ? styles$F.centerLabel : void 0
                   ),
                   children: col.value
                 },
@@ -65930,7 +66133,7 @@ Supported expressions:
     };
     const title$2 = "_title_19l1b_1";
     const contents$1 = "_contents_19l1b_8";
-    const styles$F = {
+    const styles$E = {
       title: title$2,
       contents: contents$1
     };
@@ -65940,7 +66143,7 @@ Supported expressions:
       className: className2,
       children: children2
     }) => {
-      const contentEl = title2 ? /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("div", { className: clsx("text-size-small", styles$F.title, className2), children: [
+      const contentEl = title2 ? /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("div", { className: clsx("text-size-small", styles$E.title, className2), children: [
         /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("i", { className: icon2 || ApplicationIcons.metadata }, void 0, false, {
           fileName: "/Users/charlesteague/Development/ukgovernmentbeis/inspect_ai/src/inspect_ai/_view/www/src/samples/transcript/event/EventRow.tsx",
           lineNumber: 23,
@@ -65961,7 +66164,7 @@ Supported expressions:
         lineNumber: 22,
         columnNumber: 5
       }, void 0) : "";
-      const card2 = /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("div", { className: clsx("card", styles$F.contents), children: contentEl }, void 0, false, {
+      const card2 = /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("div", { className: clsx("card", styles$E.contents), children: contentEl }, void 0, false, {
         fileName: "/Users/charlesteague/Development/ukgovernmentbeis/inspect_ai/src/inspect_ai/_view/www/src/samples/transcript/event/EventRow.tsx",
         lineNumber: 31,
         columnNumber: 16
@@ -66023,7 +66226,7 @@ Supported expressions:
       }
     };
     const tab = "_tab_1je38_1";
-    const styles$E = {
+    const styles$D = {
       tab
     };
     const EventNav = ({
@@ -66048,7 +66251,7 @@ Supported expressions:
             active2 ? "active " : "",
             "text-style-label",
             "text-size-small",
-            styles$E.tab
+            styles$D.tab
           ),
           onClick: handleClick,
           children: title2
@@ -66068,7 +66271,7 @@ Supported expressions:
       }, void 0);
     };
     const navs$1 = "_navs_1vm6p_1";
-    const styles$D = {
+    const styles$C = {
       navs: navs$1
     };
     const EventNavs = ({
@@ -66079,7 +66282,7 @@ Supported expressions:
       return /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV(
         "ul",
         {
-          className: clsx("nav", "nav-pills", styles$D.navs),
+          className: clsx("nav", "nav-pills", styles$C.navs),
           role: "tablist",
           "aria-orientation": "horizontal",
           children: navs2.map((nav2) => {
@@ -66117,7 +66320,7 @@ Supported expressions:
     const card = "_card_7z797_12";
     const cardContent = "_cardContent_7z797_18";
     const hidden$1 = "_hidden_7z797_23";
-    const styles$C = {
+    const styles$B = {
       label: label$1,
       navs,
       card,
@@ -66230,7 +66433,7 @@ Supported expressions:
             /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV(
               "div",
               {
-                className: clsx("text-style-secondary", styles$C.label),
+                className: clsx("text-style-secondary", styles$B.label),
                 onClick: toggleCollapse,
                 children: isCollapsed ? text2 : ""
               },
@@ -66243,7 +66446,7 @@ Supported expressions:
               },
               void 0
             ),
-            /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("div", { className: styles$C.navs, children: (!hasCollapse || !isCollapsed) && filteredArrChildren && filteredArrChildren.length > 1 ? /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV(
+            /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("div", { className: styles$B.navs, children: (!hasCollapse || !isCollapsed) && filteredArrChildren && filteredArrChildren.length > 1 ? /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV(
               EventNavs,
               {
                 navs: filteredArrChildren.map((child, index) => {
@@ -66283,15 +66486,15 @@ Supported expressions:
         void 0
       ) : "";
       const card2 = /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV(jsxDevRuntimeExports.Fragment, { children: [
-        /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("div", { id, className: clsx(className2, styles$C.card), children: [
+        /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("div", { id, className: clsx(className2, styles$B.card), children: [
           titleEl,
           /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV(
             "div",
             {
               className: clsx(
                 "tab-content",
-                styles$C.cardContent,
-                hasCollapse && isCollapsed ? styles$C.hidden : void 0
+                styles$B.cardContent,
+                hasCollapse && isCollapsed ? styles$B.hidden : void 0
               ),
               children: filteredArrChildren == null ? void 0 : filteredArrChildren.map((child, index) => {
                 const id2 = pillId(index);
@@ -66383,7 +66586,7 @@ Supported expressions:
       );
     };
     const panel$1 = "_panel_8zdtn_1";
-    const styles$B = {
+    const styles$A = {
       panel: panel$1
     };
     const InfoEventView = ({
@@ -66393,13 +66596,13 @@ Supported expressions:
     }) => {
       const panels = [];
       if (typeof event.data === "string") {
-        panels.push(/* @__PURE__ */ jsxDevRuntimeExports.jsxDEV(MarkdownDiv, { markdown: event.data, className: styles$B.panel }, void 0, false, {
+        panels.push(/* @__PURE__ */ jsxDevRuntimeExports.jsxDEV(MarkdownDiv, { markdown: event.data, className: styles$A.panel }, void 0, false, {
           fileName: "/Users/charlesteague/Development/ukgovernmentbeis/inspect_ai/src/inspect_ai/_view/www/src/samples/transcript/InfoEventView.tsx",
           lineNumber: 26,
           columnNumber: 17
         }, void 0));
       } else {
-        panels.push(/* @__PURE__ */ jsxDevRuntimeExports.jsxDEV(JSONPanel, { data: event.data, className: styles$B.panel }, void 0, false, {
+        panels.push(/* @__PURE__ */ jsxDevRuntimeExports.jsxDEV(JSONPanel, { data: event.data, className: styles$A.panel }, void 0, false, {
           fileName: "/Users/charlesteague/Development/ukgovernmentbeis/inspect_ai/src/inspect_ai/_view/www/src/samples/transcript/InfoEventView.tsx",
           lineNumber: 28,
           columnNumber: 17
@@ -66466,7 +66669,7 @@ Supported expressions:
     };
     const grid$2 = "_grid_1eq5o_1";
     const jsonPanel = "_jsonPanel_1eq5o_8";
-    const styles$A = {
+    const styles$z = {
       grid: grid$2,
       jsonPanel
     };
@@ -66481,7 +66684,7 @@ Supported expressions:
           className: className2,
           title: event.message.level,
           icon: ApplicationIcons.logging[event.message.level.toLowerCase()],
-          children: /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("div", { className: clsx("text-size-base", styles$A.grid), children: [
+          children: /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("div", { className: clsx("text-size-base", styles$z.grid), children: [
             /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("div", { className: clsx("text-size-smaller"), children: obj !== void 0 && obj !== null ? /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV(MetaDataGrid, { entries: obj }, void 0, false, {
               fileName: "/Users/charlesteague/Development/ukgovernmentbeis/inspect_ai/src/inspect_ai/_view/www/src/samples/transcript/LoggerEventView.tsx",
               lineNumber: 33,
@@ -66516,10 +66719,10 @@ Supported expressions:
         void 0
       );
     };
-    const container$9 = "_container_1brs9_1";
+    const container$8 = "_container_1brs9_1";
     const title$1 = "_title_1brs9_5";
-    const styles$z = {
-      container: container$9,
+    const styles$y = {
+      container: container$8,
       title: title$1
     };
     const EventSection = ({
@@ -66527,11 +66730,11 @@ Supported expressions:
       children: children2,
       className: className2
     }) => {
-      return /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("div", { className: clsx(styles$z.container, className2), children: [
+      return /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("div", { className: clsx(styles$y.container, className2), children: [
         /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV(
           "div",
           {
-            className: clsx("text-size-small", "text-style-label", styles$z.title),
+            className: clsx("text-size-small", "text-style-label", styles$y.title),
             children: title2
           },
           void 0,
@@ -66551,16 +66754,16 @@ Supported expressions:
       }, void 0);
     };
     const output = "_output_3axgd_1";
-    const container$8 = "_container_3axgd_5";
+    const container$7 = "_container_3axgd_5";
     const all = "_all_3axgd_10";
     const tableSelection = "_tableSelection_3axgd_16";
     const tools$1 = "_tools_3axgd_22";
     const codePre = "_codePre_3axgd_26";
     const code$1 = "_code_3axgd_26";
     const toolConfig = "_toolConfig_3axgd_38";
-    const styles$y = {
+    const styles$x = {
       output,
-      container: container$8,
+      container: container$7,
       all,
       tableSelection,
       tools: tools$1,
@@ -66574,7 +66777,7 @@ Supported expressions:
     const col3 = "_col3_45f60_16";
     const separator$2 = "_separator_45f60_20";
     const topMargin = "_topMargin_45f60_26";
-    const styles$x = {
+    const styles$w = {
       wrapper: wrapper$2,
       col2: col2$1,
       col1_3,
@@ -66642,9 +66845,9 @@ Supported expressions:
           });
         }
       }
-      return /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("div", { className: clsx("text-size-small", styles$x.wrapper), children: rows.map((row2, idx) => {
+      return /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("div", { className: clsx("text-size-small", styles$w.wrapper), children: rows.map((row2, idx) => {
         if (row2.label === "---") {
-          return /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("div", { className: styles$x.separator }, `$usage-sep-${idx}`, false, {
+          return /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("div", { className: styles$w.separator }, `$usage-sep-${idx}`, false, {
             fileName: "/Users/charlesteague/Development/ukgovernmentbeis/inspect_ai/src/inspect_ai/_view/www/src/samples/transcript/event/EventTimingPanel.tsx",
             lineNumber: 93,
             columnNumber: 13
@@ -66657,8 +66860,8 @@ Supported expressions:
                 className: clsx(
                   "text-style-label",
                   "text-style-secondary",
-                  row2.secondary ? styles$x.col2 : styles$x.col1_3,
-                  row2.topMargin ? styles$x.topMargin : void 0
+                  row2.secondary ? styles$w.col2 : styles$w.col1_3,
+                  row2.topMargin ? styles$w.topMargin : void 0
                 ),
                 children: row2.label
               },
@@ -66671,7 +66874,7 @@ Supported expressions:
               },
               void 0
             ),
-            /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("div", { className: styles$x.col3, children: row2.value ? row2.value : "" }, void 0, false, {
+            /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("div", { className: styles$w.col3, children: row2.value ? row2.value : "" }, void 0, false, {
               fileName: "/Users/charlesteague/Development/ukgovernmentbeis/inspect_ai/src/inspect_ai/_view/www/src/samples/transcript/event/EventTimingPanel.tsx",
               lineNumber: 108,
               columnNumber: 15
@@ -66739,12 +66942,12 @@ Supported expressions:
           icon: ApplicationIcons.model,
           running: !!event.pending,
           children: [
-            /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("div", { "data-name": "Summary", className: styles$y.container, children: /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV(
+            /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("div", { "data-name": "Summary", className: styles$x.container, children: /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV(
               ChatView,
               {
                 id: `${id}-model-output`,
                 messages: [...userMessages, ...outputMessages || []],
-                className: clsx(styles$y.output),
+                className: clsx(styles$x.output),
                 numbered: false,
                 toolCallStyle: "compact"
               },
@@ -66761,9 +66964,9 @@ Supported expressions:
               lineNumber: 74,
               columnNumber: 7
             }, void 0),
-            /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("div", { "data-name": "All", className: styles$y.container, children: [
-              /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("div", { className: styles$y.all, children: [
-                /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV(EventSection, { title: "Configuration", className: styles$y.tableSelection, children: /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV(MetaDataGrid, { entries, plain: true }, void 0, false, {
+            /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("div", { "data-name": "All", className: styles$x.container, children: [
+              /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("div", { className: styles$x.all, children: [
+                /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV(EventSection, { title: "Configuration", className: styles$x.tableSelection, children: /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV(MetaDataGrid, { entries, plain: true }, void 0, false, {
                   fileName: "/Users/charlesteague/Development/ukgovernmentbeis/inspect_ai/src/inspect_ai/_view/www/src/samples/transcript/ModelEventView.tsx",
                   lineNumber: 86,
                   columnNumber: 13
@@ -66772,7 +66975,7 @@ Supported expressions:
                   lineNumber: 85,
                   columnNumber: 11
                 }, void 0),
-                /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV(EventSection, { title: "Usage", className: styles$y.tableSelection, children: event.output.usage !== null ? /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV(ModelUsagePanel, { usage: event.output.usage }, void 0, false, {
+                /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV(EventSection, { title: "Usage", className: styles$x.tableSelection, children: event.output.usage !== null ? /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV(ModelUsagePanel, { usage: event.output.usage }, void 0, false, {
                   fileName: "/Users/charlesteague/Development/ukgovernmentbeis/inspect_ai/src/inspect_ai/_view/www/src/samples/transcript/ModelEventView.tsx",
                   lineNumber: 91,
                   columnNumber: 15
@@ -66781,7 +66984,7 @@ Supported expressions:
                   lineNumber: 89,
                   columnNumber: 11
                 }, void 0),
-                /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV(EventSection, { title: "Timing", className: styles$y.tableSelection, children: /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV(
+                /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV(EventSection, { title: "Timing", className: styles$x.tableSelection, children: /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV(
                   EventTimingPanel,
                   {
                     timestamp: event.timestamp,
@@ -66806,7 +67009,7 @@ Supported expressions:
                   EventSection,
                   {
                     title: "Tools",
-                    className: clsx(styles$y.tableSelection, styles$y.tools),
+                    className: clsx(styles$x.tableSelection, styles$x.tools),
                     children: /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV(ToolsConfig, { tools: event.tools }, void 0, false, {
                       fileName: "/Users/charlesteague/Development/ukgovernmentbeis/inspect_ai/src/inspect_ai/_view/www/src/samples/transcript/ModelEventView.tsx",
                       lineNumber: 108,
@@ -66856,7 +67059,7 @@ Supported expressions:
               {
                 "data-name": "API",
                 call: event.call,
-                className: styles$y.container
+                className: styles$x.container
               },
               void 0,
               false,
@@ -66921,12 +67124,12 @@ Supported expressions:
       if (!contents2) {
         return null;
       }
-      return /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("div", { className: clsx("model-call"), children: /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("pre", { className: clsx(styles$y.codePre), children: /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV(
+      return /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("div", { className: clsx("model-call"), children: /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("pre", { className: clsx(styles$x.codePre), children: /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV(
         "code",
         {
           id,
           ref: codeRef,
-          className: clsx("language-json", styles$y.code, "text-size-small"),
+          className: clsx("language-json", styles$x.code, "text-size-small"),
           children: sourceCode
         },
         void 0,
@@ -66966,7 +67169,7 @@ Supported expressions:
           columnNumber: 7
         }, void 0);
       });
-      return /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("div", { className: styles$y.toolConfig, children: toolEls }, void 0, false, {
+      return /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("div", { className: styles$x.toolConfig, children: toolEls }, void 0, false, {
         fileName: "/Users/charlesteague/Development/ukgovernmentbeis/inspect_ai/src/inspect_ai/_view/www/src/samples/transcript/ModelEventView.tsx",
         lineNumber: 207,
         columnNumber: 10
@@ -66977,7 +67180,7 @@ Supported expressions:
     const sample = "_sample_1a3fk_10";
     const section = "_section_1a3fk_14";
     const metadata$1 = "_metadata_1a3fk_21";
-    const styles$w = {
+    const styles$v = {
       noMargin,
       code,
       sample,
@@ -66994,7 +67197,7 @@ Supported expressions:
       if (event.sample.files && Object.keys(event.sample.files).length > 0) {
         sections.push(
           /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV(EventSection, { title: "Files", children: Object.keys(event.sample.files).map((file) => {
-            return /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("pre", { className: styles$w.noMargin, children: file }, `sample-init-file-${file}`, false, {
+            return /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("pre", { className: styles$v.noMargin, children: file }, `sample-init-file-${file}`, false, {
               fileName: "/Users/charlesteague/Development/ukgovernmentbeis/inspect_ai/src/inspect_ai/_view/www/src/samples/transcript/SampleInitEventView.tsx",
               lineNumber: 37,
               columnNumber: 13
@@ -67008,7 +67211,7 @@ Supported expressions:
       }
       if (event.sample.setup) {
         sections.push(
-          /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV(EventSection, { title: "Setup", children: /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("pre", { className: styles$w.code, children: /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("code", { className: "sourceCode", children: event.sample.setup }, void 0, false, {
+          /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV(EventSection, { title: "Setup", children: /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("pre", { className: styles$v.code, children: /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("code", { className: "sourceCode", children: event.sample.setup }, void 0, false, {
             fileName: "/Users/charlesteague/Development/ukgovernmentbeis/inspect_ai/src/inspect_ai/_view/www/src/samples/transcript/SampleInitEventView.tsx",
             lineNumber: 50,
             columnNumber: 11
@@ -67032,7 +67235,7 @@ Supported expressions:
           icon: ApplicationIcons.sample,
           subTitle: formatDateTime(new Date(event.timestamp)),
           children: [
-            /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("div", { "data-name": "Sample", className: styles$w.sample, children: [
+            /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("div", { "data-name": "Sample", className: styles$v.sample, children: [
               /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV(ChatView, { messages: stateObj["messages"] }, void 0, false, {
                 fileName: "/Users/charlesteague/Development/ukgovernmentbeis/inspect_ai/src/inspect_ai/_view/www/src/samples/transcript/SampleInitEventView.tsx",
                 lineNumber: 65,
@@ -67050,7 +67253,7 @@ Supported expressions:
                     columnNumber: 19
                   }, void 0);
                 }) : "",
-                sections.length > 0 ? /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("div", { className: styles$w.section, children: sections }, void 0, false, {
+                sections.length > 0 ? /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("div", { className: styles$v.section, children: sections }, void 0, false, {
                   fileName: "/Users/charlesteague/Development/ukgovernmentbeis/inspect_ai/src/inspect_ai/_view/www/src/samples/transcript/SampleInitEventView.tsx",
                   lineNumber: 77,
                   columnNumber: 13
@@ -67080,7 +67283,7 @@ Supported expressions:
               MetaDataGrid,
               {
                 "data-name": "Metadata",
-                className: styles$w.metadata,
+                className: styles$v.metadata,
                 entries: event.sample.metadata
               },
               void 0,
@@ -67155,7 +67358,7 @@ Supported expressions:
     const result = "_result_iwnfd_19";
     const fileLabel = "_fileLabel_iwnfd_23";
     const wrapPre = "_wrapPre_iwnfd_28";
-    const styles$v = {
+    const styles$u = {
       contents,
       twoColumn,
       exec,
@@ -67209,14 +67412,14 @@ Supported expressions:
       const input2 = event.input;
       const result2 = event.result;
       const output2 = event.output;
-      return /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("div", { className: clsx(styles$v.exec), children: [
-        /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV(EventSection, { title: `Command`, children: /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("div", { className: clsx(styles$v.twoColumn), children: [
-          /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("pre", { className: clsx(styles$v.wrapPre), children: cmd2 }, void 0, false, {
+      return /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("div", { className: clsx(styles$u.exec), children: [
+        /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV(EventSection, { title: `Command`, children: /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("div", { className: clsx(styles$u.twoColumn), children: [
+          /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("pre", { className: clsx(styles$u.wrapPre), children: cmd2 }, void 0, false, {
             fileName: "/Users/charlesteague/Development/ukgovernmentbeis/inspect_ai/src/inspect_ai/_view/www/src/samples/transcript/SandboxEventView.tsx",
             lineNumber: 66,
             columnNumber: 11
           }, void 0),
-          /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("pre", { className: clsx(styles$v.wrapPre), children: input2 !== null ? input2 == null ? void 0 : input2.trim() : void 0 }, void 0, false, {
+          /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("pre", { className: clsx(styles$u.wrapPre), children: input2 !== null ? input2 == null ? void 0 : input2.trim() : void 0 }, void 0, false, {
             fileName: "/Users/charlesteague/Development/ukgovernmentbeis/inspect_ai/src/inspect_ai/_view/www/src/samples/transcript/SandboxEventView.tsx",
             lineNumber: 67,
             columnNumber: 11
@@ -67259,7 +67462,7 @@ Supported expressions:
             lineNumber: 83,
             columnNumber: 11
           }, void 0) : void 0,
-          /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("div", { className: clsx(styles$v.result), children: [
+          /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("div", { className: clsx(styles$u.result), children: [
             "Exited with code ",
             result2
           ] }, void 0, true, {
@@ -67304,7 +67507,7 @@ Supported expressions:
     };
     const FileView = ({ id, file, contents: contents2 }) => {
       return /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("div", { children: [
-        /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV(EventSection, { title: "File", children: /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("pre", { className: clsx(styles$v.fileLabel), children: file }, void 0, false, {
+        /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV(EventSection, { title: "File", children: /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("pre", { className: clsx(styles$u.fileLabel), children: file }, void 0, false, {
           fileName: "/Users/charlesteague/Development/ukgovernmentbeis/inspect_ai/src/inspect_ai/_view/www/src/samples/transcript/SandboxEventView.tsx",
           lineNumber: 132,
           columnNumber: 9
@@ -67335,7 +67538,7 @@ Supported expressions:
     const explanation = "_explanation_1ww42_1";
     const separator$1 = "_separator_1ww42_8";
     const metadata = "_metadata_1ww42_13";
-    const styles$u = {
+    const styles$t = {
       explanation,
       separator: separator$1,
       metadata
@@ -67355,9 +67558,9 @@ Supported expressions:
           subTitle: formatDateTime(new Date(event.timestamp)),
           icon: ApplicationIcons.scorer,
           children: [
-            /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("div", { "data-name": "Explanation", className: clsx(styles$u.explanation), children: [
+            /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("div", { "data-name": "Explanation", className: clsx(styles$t.explanation), children: [
               event.target ? /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV(reactExports.Fragment, { children: [
-                /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("div", { className: clsx(styles$u.separator) }, void 0, false, {
+                /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("div", { className: clsx(styles$t.separator) }, void 0, false, {
                   fileName: "/Users/charlesteague/Development/ukgovernmentbeis/inspect_ai/src/inspect_ai/_view/www/src/samples/transcript/ScoreEventView.tsx",
                   lineNumber: 43,
                   columnNumber: 13
@@ -67381,7 +67584,7 @@ Supported expressions:
                 lineNumber: 42,
                 columnNumber: 11
               }, void 0) : "",
-              /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("div", { className: clsx(styles$u.separator) }, void 0, false, {
+              /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("div", { className: clsx(styles$t.separator) }, void 0, false, {
                 fileName: "/Users/charlesteague/Development/ukgovernmentbeis/inspect_ai/src/inspect_ai/_view/www/src/samples/transcript/ScoreEventView.tsx",
                 lineNumber: 52,
                 columnNumber: 9
@@ -67400,7 +67603,7 @@ Supported expressions:
                 lineNumber: 54,
                 columnNumber: 9
               }, void 0),
-              /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("div", { className: clsx(styles$u.separator) }, void 0, false, {
+              /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("div", { className: clsx(styles$t.separator) }, void 0, false, {
                 fileName: "/Users/charlesteague/Development/ukgovernmentbeis/inspect_ai/src/inspect_ai/_view/www/src/samples/transcript/ScoreEventView.tsx",
                 lineNumber: 57,
                 columnNumber: 9
@@ -67419,7 +67622,7 @@ Supported expressions:
                 lineNumber: 59,
                 columnNumber: 9
               }, void 0),
-              /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("div", { className: clsx(styles$u.separator) }, void 0, false, {
+              /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("div", { className: clsx(styles$t.separator) }, void 0, false, {
                 fileName: "/Users/charlesteague/Development/ukgovernmentbeis/inspect_ai/src/inspect_ai/_view/www/src/samples/transcript/ScoreEventView.tsx",
                 lineNumber: 62,
                 columnNumber: 9
@@ -67434,7 +67637,7 @@ Supported expressions:
                 lineNumber: 64,
                 columnNumber: 9
               }, void 0),
-              /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("div", { className: clsx(styles$u.separator) }, void 0, false, {
+              /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("div", { className: clsx(styles$t.separator) }, void 0, false, {
                 fileName: "/Users/charlesteague/Development/ukgovernmentbeis/inspect_ai/src/inspect_ai/_view/www/src/samples/transcript/ScoreEventView.tsx",
                 lineNumber: 65,
                 columnNumber: 9
@@ -67448,7 +67651,7 @@ Supported expressions:
               MetaDataGrid,
               {
                 entries: event.score.metadata,
-                className: styles$u.metadata
+                className: styles$t.metadata
               },
               void 0,
               false,
@@ -73830,7 +74033,7 @@ ${events}
     const lightboxPreviewButton = "_lightboxPreviewButton_1mvg8_63";
     const next = "_next_1mvg8_76";
     const prev = "_prev_1mvg8_80";
-    const styles$t = {
+    const styles$s = {
       carouselThumbs,
       carouselThumb,
       carouselPlayIcon,
@@ -73903,12 +74106,12 @@ ${events}
         [openLightbox]
       );
       return /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("div", { className: clsx("lightbox-carousel-container"), children: [
-        /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("div", { className: clsx(styles$t.carouselThumbs), children: slides.map((slide, index) => {
+        /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("div", { className: clsx(styles$s.carouselThumbs), children: slides.map((slide, index) => {
           return /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV(
             "div",
             {
               "data-index": index,
-              className: clsx(styles$t.carouselThumb),
+              className: clsx(styles$s.carouselThumb),
               onClick: handleThumbClick,
               children: [
                 /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("div", { children: slide.label }, void 0, false, {
@@ -73921,7 +74124,7 @@ ${events}
                   {
                     className: clsx(
                       ApplicationIcons.play,
-                      styles$t.carouselPlayIcon
+                      styles$s.carouselPlayIcon
                     )
                   },
                   void 0,
@@ -73956,12 +74159,12 @@ ${events}
         showOverlay && /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV(
           "div",
           {
-            className: clsx(styles$t.lightboxOverlay, isOpen ? "open" : "closed"),
+            className: clsx(styles$s.lightboxOverlay, isOpen ? "open" : "closed"),
             children: [
-              /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("div", { className: clsx(styles$t.lightboxButtonCloseWrapper), children: /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV(
+              /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("div", { className: clsx(styles$s.lightboxButtonCloseWrapper), children: /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV(
                 "button",
                 {
-                  className: styles$t.lightboxButtonClose,
+                  className: styles$s.lightboxButtonClose,
                   onClick: closeLightbox,
                   children: /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("i", { className: ApplicationIcons.close }, void 0, false, {
                     fileName: "/Users/charlesteague/Development/ukgovernmentbeis/inspect_ai/src/inspect_ai/_view/www/src/components/LightboxCarousel.tsx",
@@ -73985,7 +74188,7 @@ ${events}
               slides.length > 1 ? /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV(
                 "button",
                 {
-                  className: clsx(styles$t.lightboxPreviewButton, "prev"),
+                  className: clsx(styles$s.lightboxPreviewButton, "prev"),
                   onClick: showPrev,
                   children: /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("i", { className: ApplicationIcons.previous }, void 0, false, {
                     fileName: "/Users/charlesteague/Development/ukgovernmentbeis/inspect_ai/src/inspect_ai/_view/www/src/components/LightboxCarousel.tsx",
@@ -74005,7 +74208,7 @@ ${events}
               slides.length > 1 ? /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV(
                 "button",
                 {
-                  className: clsx(styles$t.lightboxPreviewButton, "next"),
+                  className: clsx(styles$s.lightboxPreviewButton, "next"),
                   onClick: showNext,
                   children: /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("i", { className: ApplicationIcons.next }, void 0, false, {
                     fileName: "/Users/charlesteague/Development/ukgovernmentbeis/inspect_ai/src/inspect_ai/_view/www/src/components/LightboxCarousel.tsx",
@@ -74025,7 +74228,7 @@ ${events}
               /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV(
                 "div",
                 {
-                  className: clsx(styles$t.lightboxContent, isOpen ? "open" : "closed"),
+                  className: clsx(styles$s.lightboxContent, isOpen ? "open" : "closed"),
                   children: slides[currentIndex].render()
                 },
                 `carousel-slide-${currentIndex}`,
@@ -74218,7 +74421,7 @@ ${events}
     };
     const tools = "_tools_13oio_1";
     const tool = "_tool_13oio_1";
-    const styles$s = {
+    const styles$r = {
       tools,
       tool
     };
@@ -74380,7 +74583,7 @@ ${events}
           }, void 0);
         }
       }
-      return /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("div", { className: clsx(styles$s.tools), children: Object.keys(toolsInfo).map((key2) => {
+      return /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("div", { className: clsx(styles$r.tools), children: Object.keys(toolsInfo).map((key2) => {
         return /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV(reactExports.Fragment, { children: [
           /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV(
             "div",
@@ -74449,7 +74652,7 @@ ${events}
     };
     const Tool = ({ toolName, toolArgs }) => {
       const functionCall = toolArgs && toolArgs.length > 0 ? `${toolName}(${toolArgs.join(", ")})` : toolName;
-      return /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("div", { children: /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("code", { className: clsx("text-size-small", styles$s.tool), children: functionCall }, void 0, false, {
+      return /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("div", { children: /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("code", { className: clsx("text-size-small", styles$r.tool), children: functionCall }, void 0, false, {
         fileName: "/Users/charlesteague/Development/ukgovernmentbeis/inspect_ai/src/inspect_ai/_view/www/src/samples/transcript/state/StateEventRenderers.tsx",
         lineNumber: 280,
         columnNumber: 7
@@ -74461,7 +74664,7 @@ ${events}
     };
     const diff = "_diff_eobja_1";
     const summary$2 = "_summary_eobja_6";
-    const styles$r = {
+    const styles$q = {
       diff,
       summary: summary$2
     };
@@ -74491,7 +74694,7 @@ ${events}
           text: !changePreview ? summary2 : void 0,
           collapse: changePreview === void 0 ? true : void 0,
           children: [
-            changePreview ? /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("div", { "data-name": "Summary", className: clsx(styles$r.summary), children: changePreview }, void 0, false, {
+            changePreview ? /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("div", { "data-name": "Summary", className: clsx(styles$q.summary), children: changePreview }, void 0, false, {
               fileName: "/Users/charlesteague/Development/ukgovernmentbeis/inspect_ai/src/inspect_ai/_view/www/src/samples/transcript/state/StateEventView.tsx",
               lineNumber: 66,
               columnNumber: 9
@@ -74502,7 +74705,7 @@ ${events}
                 before,
                 after,
                 "data-name": "Diff",
-                className: clsx(styles$r.diff)
+                className: clsx(styles$q.diff)
               },
               void 0,
               false,
@@ -74846,7 +75049,7 @@ ${events}
     const summaryRendered = "_summaryRendered_ac4z2_6";
     const subtaskSummary = "_subtaskSummary_ac4z2_10";
     const subtaskLabel = "_subtaskLabel_ac4z2_17";
-    const styles$q = {
+    const styles$p = {
       summary: summary$1,
       summaryRendered,
       subtaskSummary,
@@ -74861,13 +75064,13 @@ ${events}
       const body2 = [];
       if (event.type === "fork") {
         body2.push(
-          /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("div", { title: "Summary", className: clsx(styles$q.summary), children: [
+          /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("div", { title: "Summary", className: clsx(styles$p.summary), children: [
             /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("div", { className: clsx("text-style-label"), children: "Inputs" }, void 0, false, {
               fileName: "/Users/charlesteague/Development/ukgovernmentbeis/inspect_ai/src/inspect_ai/_view/www/src/samples/transcript/SubtaskEventView.tsx",
               lineNumber: 31,
               columnNumber: 9
             }, void 0),
-            /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("div", { className: clsx(styles$q.summaryRendered), children: /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV(Rendered, { values: event.input }, void 0, false, {
+            /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("div", { className: clsx(styles$p.summaryRendered), children: /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV(Rendered, { values: event.input }, void 0, false, {
               fileName: "/Users/charlesteague/Development/ukgovernmentbeis/inspect_ai/src/inspect_ai/_view/www/src/samples/transcript/SubtaskEventView.tsx",
               lineNumber: 33,
               columnNumber: 11
@@ -74977,13 +75180,13 @@ ${events}
     };
     const SubtaskSummary = ({ input: input2, result: result2 }) => {
       const output2 = typeof result2 === "object" ? result2 : { result: result2 };
-      return /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("div", { className: clsx(styles$q.subtaskSummary), children: [
+      return /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("div", { className: clsx(styles$p.subtaskSummary), children: [
         /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("div", { className: clsx("text-style-label"), children: "Input" }, void 0, false, {
           fileName: "/Users/charlesteague/Development/ukgovernmentbeis/inspect_ai/src/inspect_ai/_view/www/src/samples/transcript/SubtaskEventView.tsx",
           lineNumber: 99,
           columnNumber: 7
         }, void 0),
-        /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("div", { className: clsx("text-size-large", styles$q.subtaskLabel) }, void 0, false, {
+        /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("div", { className: clsx("text-size-large", styles$p.subtaskLabel) }, void 0, false, {
           fileName: "/Users/charlesteague/Development/ukgovernmentbeis/inspect_ai/src/inspect_ai/_view/www/src/samples/transcript/SubtaskEventView.tsx",
           lineNumber: 100,
           columnNumber: 7
@@ -74998,7 +75201,7 @@ ${events}
           lineNumber: 102,
           columnNumber: 16
         }, void 0) : void 0,
-        /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("div", { className: clsx("text-size-title-secondary", styles$q.subtaskLabel), children: /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("i", { className: ApplicationIcons.arrows.right }, void 0, false, {
+        /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("div", { className: clsx("text-size-title-secondary", styles$p.subtaskLabel), children: /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("i", { className: ApplicationIcons.arrows.right }, void 0, false, {
           fileName: "/Users/charlesteague/Development/ukgovernmentbeis/inspect_ai/src/inspect_ai/_view/www/src/samples/transcript/SubtaskEventView.tsx",
           lineNumber: 104,
           columnNumber: 9
@@ -75058,7 +75261,7 @@ ${events}
     };
     const summary = "_summary_1qkjz_1";
     const approval = "_approval_1qkjz_6";
-    const styles$p = {
+    const styles$o = {
       summary,
       approval
     };
@@ -75087,7 +75290,7 @@ ${events}
           icon: ApplicationIcons.solvers.use_tools,
           running: !!event.pending,
           children: [
-            /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("div", { "data-name": "Summary", className: styles$p.summary, children: [
+            /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("div", { "data-name": "Summary", className: styles$o.summary, children: [
               /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV(
                 ToolCallView,
                 {
@@ -75112,7 +75315,7 @@ ${events}
                 ApprovalEventView,
                 {
                   event: approvalEvent,
-                  className: styles$p.approval
+                  className: styles$o.approval
                 },
                 void 0,
                 false,
@@ -75177,7 +75380,7 @@ ${events}
     const lastNode = "_lastNode_c8m1t_39";
     const eventNodeContainer = "_eventNodeContainer_c8m1t_43";
     const noBottom = "_noBottom_c8m1t_47";
-    const styles$o = {
+    const styles$n = {
       darkenedBg: darkenedBg$1,
       normalBg: normalBg$1,
       node: node$1,
@@ -75194,7 +75397,7 @@ ${events}
     const normalBg = "_normalBg_1ye6u_5";
     const node = "_node_1ye6u_9";
     const first = "_first_1ye6u_9";
-    const styles$n = {
+    const styles$m = {
       darkenedBg,
       normalBg,
       node,
@@ -75275,10 +75478,10 @@ ${events}
         }
       }, [scrollRef, handleScroll]);
       const renderRow = reactExports.useCallback((index, item2) => {
-        const bgClass = item2.depth % 2 == 0 ? styles$n.darkenedBg : styles$n.normalBg;
-        const paddingClass = index === 0 ? styles$n.first : void 0;
+        const bgClass = item2.depth % 2 == 0 ? styles$m.darkenedBg : styles$m.normalBg;
+        const paddingClass = index === 0 ? styles$m.first : void 0;
         const eventId = `${id}-event${index}`;
-        return /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("div", { className: clsx(styles$n.node, paddingClass), children: /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV(RenderedEventNode, { id: eventId, node: item2, className: clsx(bgClass) }, void 0, false, {
+        return /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("div", { className: clsx(styles$m.node, paddingClass), children: /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV(RenderedEventNode, { id: eventId, node: item2, className: clsx(bgClass) }, void 0, false, {
           fileName: "/Users/charlesteague/Development/ukgovernmentbeis/inspect_ai/src/inspect_ai/_view/www/src/samples/transcript/TranscriptVirtualListComponent.tsx",
           lineNumber: 140,
           columnNumber: 9
@@ -75360,20 +75563,20 @@ ${events}
     const TranscriptComponent = reactExports.memo(
       ({ id, eventNodes }) => {
         const rows = eventNodes.map((eventNode2, index) => {
-          const clz = [styles$o.eventNode];
+          const clz = [styles$n.eventNode];
           if (eventNode2.depth % 2 == 0) {
-            clz.push(styles$o.darkenBg);
+            clz.push(styles$n.darkenBg);
           }
           if (index === eventNodes.length - 1) {
-            clz.push(styles$o.lastNode);
+            clz.push(styles$n.lastNode);
           }
           const eventId = `${id}-event${index}`;
           const row2 = /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV(
             "div",
             {
               className: clsx(
-                styles$o.eventNodeContainer,
-                index === eventNodes.length - 1 ? styles$o.noBottom : void 0
+                styles$n.eventNodeContainer,
+                index === eventNodes.length - 1 ? styles$n.noBottom : void 0
               ),
               children: /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV(
                 RenderedEventNode,
@@ -75407,7 +75610,7 @@ ${events}
           "div",
           {
             id,
-            className: clsx("text-size-small", styles$o.transcriptComponent),
+            className: clsx("text-size-small", styles$n.transcriptComponent),
             children: rows
           },
           void 0,
@@ -75675,7 +75878,15 @@ ${events}
       );
       const sampleSummary = sampleSummaries[selectedSampleIndex];
       const sampleEvents = (sample2 == null ? void 0 : sample2.events) || runningSampleData;
-      const sampleMessages = (sample2 == null ? void 0 : sample2.messages) || [];
+      const sampleMessages = reactExports.useMemo(() => {
+        if (sample2 == null ? void 0 : sample2.messages) {
+          return sample2.messages;
+        } else if (runningSampleData) {
+          return messagesFromEvents(runningSampleData);
+        } else {
+          return [];
+        }
+      }, [sample2 == null ? void 0 : sample2.messages, runningSampleData]);
       const onSelectedTab = (e) => {
         const el = e.currentTarget;
         const id2 = el.id;
@@ -75703,7 +75914,7 @@ ${events}
             false,
             {
               fileName: "/Users/charlesteague/Development/ukgovernmentbeis/inspect_ai/src/inspect_ai/_view/www/src/samples/SampleDisplay.tsx",
-              lineNumber: 93,
+              lineNumber: 108,
               columnNumber: 7
             },
             void 0
@@ -75714,7 +75925,7 @@ ${events}
       return /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV(reactExports.Fragment, { children: [
         sample2 || sampleSummary ? /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV(SampleSummaryView, { parent_id: id, sample: sample2 || sampleSummary }, void 0, false, {
           fileName: "/Users/charlesteague/Development/ukgovernmentbeis/inspect_ai/src/inspect_ai/_view/www/src/samples/SampleDisplay.tsx",
-          lineNumber: 108,
+          lineNumber: 123,
           columnNumber: 9
         }, void 0) : void 0,
         /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV(
@@ -75722,7 +75933,7 @@ ${events}
           {
             id: tabsetId,
             tabControlsClassName: clsx("text-size-base"),
-            tabPanelsClassName: clsx(styles$I.tabPanel),
+            tabPanelsClassName: clsx(styles$H.tabPanel),
             tools: tools2,
             children: [
               /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV(
@@ -75746,7 +75957,7 @@ ${events}
                     false,
                     {
                       fileName: "/Users/charlesteague/Development/ukgovernmentbeis/inspect_ai/src/inspect_ai/_view/www/src/samples/SampleDisplay.tsx",
-                      lineNumber: 127,
+                      lineNumber: 142,
                       columnNumber: 11
                     },
                     void 0
@@ -75756,7 +75967,7 @@ ${events}
                 false,
                 {
                   fileName: "/Users/charlesteague/Development/ukgovernmentbeis/inspect_ai/src/inspect_ai/_view/www/src/samples/SampleDisplay.tsx",
-                  lineNumber: 116,
+                  lineNumber: 131,
                   columnNumber: 9
                 },
                 void 0
@@ -75765,39 +75976,36 @@ ${events}
                 TabPanel,
                 {
                   id: kSampleMessagesTabId,
-                  className: clsx("sample-tab", styles$I.fullWidth),
+                  className: clsx("sample-tab", styles$H.fullWidth, styles$H.chat),
                   title: "Messages",
                   onSelected: onSelectedTab,
                   selected: selectedTab === kSampleMessagesTabId,
                   scrollable: false,
-                  children: (sample2 == null ? void 0 : sample2.messages) ? /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV(
+                  children: /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV(
                     ChatViewVirtualList,
                     {
                       id: `${baseId}-chat-${id}`,
                       messages: sampleMessages,
                       indented: true,
                       scrollRef,
-                      toolCallStyle: "complete"
+                      toolCallStyle: "complete",
+                      running: running2
                     },
                     `${baseId}-chat-${id}`,
                     false,
                     {
                       fileName: "/Users/charlesteague/Development/ukgovernmentbeis/inspect_ai/src/inspect_ai/_view/www/src/samples/SampleDisplay.tsx",
-                      lineNumber: 145,
-                      columnNumber: 13
+                      lineNumber: 159,
+                      columnNumber: 11
                     },
                     void 0
-                  ) : /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV(NoContentsPanel, { text: "No messages" }, void 0, false, {
-                    fileName: "/Users/charlesteague/Development/ukgovernmentbeis/inspect_ai/src/inspect_ai/_view/www/src/samples/SampleDisplay.tsx",
-                    lineNumber: 154,
-                    columnNumber: 13
-                  }, void 0)
+                  )
                 },
                 kSampleMessagesTabId,
                 false,
                 {
                   fileName: "/Users/charlesteague/Development/ukgovernmentbeis/inspect_ai/src/inspect_ai/_view/www/src/samples/SampleDisplay.tsx",
-                  lineNumber: 135,
+                  lineNumber: 150,
                   columnNumber: 9
                 },
                 void 0
@@ -75812,7 +76020,7 @@ ${events}
                   selected: selectedTab === kSampleScoringTabId,
                   children: /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV(SampleScoreView, { sample: sample2, scorer: scorerNames[0] }, void 0, false, {
                     fileName: "/Users/charlesteague/Development/ukgovernmentbeis/inspect_ai/src/inspect_ai/_view/www/src/samples/SampleDisplay.tsx",
-                    lineNumber: 166,
+                    lineNumber: 178,
                     columnNumber: 13
                   }, void 0)
                 },
@@ -75820,7 +76028,7 @@ ${events}
                 false,
                 {
                   fileName: "/Users/charlesteague/Development/ukgovernmentbeis/inspect_ai/src/inspect_ai/_view/www/src/samples/SampleDisplay.tsx",
-                  lineNumber: 158,
+                  lineNumber: 170,
                   columnNumber: 11
                 },
                 void 0
@@ -75836,7 +76044,7 @@ ${events}
                     selected: selectedTab === tabId,
                     children: /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV(SampleScoreView, { sample: sample2, scorer }, void 0, false, {
                       fileName: "/Users/charlesteague/Development/ukgovernmentbeis/inspect_ai/src/inspect_ai/_view/www/src/samples/SampleDisplay.tsx",
-                      lineNumber: 182,
+                      lineNumber: 194,
                       columnNumber: 23
                     }, void 0)
                   },
@@ -75844,14 +76052,14 @@ ${events}
                   false,
                   {
                     fileName: "/Users/charlesteague/Development/ukgovernmentbeis/inspect_ai/src/inspect_ai/_view/www/src/samples/SampleDisplay.tsx",
-                    lineNumber: 174,
+                    lineNumber: 186,
                     columnNumber: 21
                   },
                   void 0
                 );
               }) : void 0 }, void 0, false, {
                 fileName: "/Users/charlesteague/Development/ukgovernmentbeis/inspect_ai/src/inspect_ai/_view/www/src/samples/SampleDisplay.tsx",
-                lineNumber: 169,
+                lineNumber: 181,
                 columnNumber: 11
               }, void 0),
               /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV(
@@ -75862,13 +76070,13 @@ ${events}
                   title: "Metadata",
                   onSelected: onSelectedTab,
                   selected: selectedTab === kSampleMetdataTabId,
-                  children: sampleMetadatas.length > 0 ? /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("div", { className: clsx(styles$I.metadataPanel), children: sampleMetadatas }, void 0, false, {
+                  children: sampleMetadatas.length > 0 ? /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("div", { className: clsx(styles$H.metadataPanel), children: sampleMetadatas }, void 0, false, {
                     fileName: "/Users/charlesteague/Development/ukgovernmentbeis/inspect_ai/src/inspect_ai/_view/www/src/samples/SampleDisplay.tsx",
-                    lineNumber: 197,
+                    lineNumber: 209,
                     columnNumber: 13
                   }, void 0) : /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV(NoContentsPanel, { text: "No metadata" }, void 0, false, {
                     fileName: "/Users/charlesteague/Development/ukgovernmentbeis/inspect_ai/src/inspect_ai/_view/www/src/samples/SampleDisplay.tsx",
-                    lineNumber: 199,
+                    lineNumber: 211,
                     columnNumber: 13
                   }, void 0)
                 },
@@ -75876,7 +76084,7 @@ ${events}
                 false,
                 {
                   fileName: "/Users/charlesteague/Development/ukgovernmentbeis/inspect_ai/src/inspect_ai/_view/www/src/samples/SampleDisplay.tsx",
-                  lineNumber: 189,
+                  lineNumber: 201,
                   columnNumber: 9
                 },
                 void 0
@@ -75889,23 +76097,23 @@ ${events}
                   title: "Error",
                   onSelected: onSelectedTab,
                   selected: selectedTab === kSampleErrorTabId,
-                  children: /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("div", { className: clsx(styles$I.padded), children: /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV(
+                  children: /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("div", { className: clsx(styles$H.padded), children: /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV(
                     ANSIDisplay,
                     {
                       output: sample2.error.traceback_ansi,
-                      className: clsx("text-size-small", styles$I.ansi)
+                      className: clsx("text-size-small", styles$H.ansi)
                     },
                     void 0,
                     false,
                     {
                       fileName: "/Users/charlesteague/Development/ukgovernmentbeis/inspect_ai/src/inspect_ai/_view/www/src/samples/SampleDisplay.tsx",
-                      lineNumber: 211,
+                      lineNumber: 223,
                       columnNumber: 15
                     },
                     void 0
                   ) }, void 0, false, {
                     fileName: "/Users/charlesteague/Development/ukgovernmentbeis/inspect_ai/src/inspect_ai/_view/www/src/samples/SampleDisplay.tsx",
-                    lineNumber: 210,
+                    lineNumber: 222,
                     columnNumber: 13
                   }, void 0)
                 },
@@ -75913,7 +76121,7 @@ ${events}
                 false,
                 {
                   fileName: "/Users/charlesteague/Development/ukgovernmentbeis/inspect_ai/src/inspect_ai/_view/www/src/samples/SampleDisplay.tsx",
-                  lineNumber: 203,
+                  lineNumber: 215,
                   columnNumber: 11
                 },
                 void 0
@@ -75928,13 +76136,13 @@ ${events}
                   selected: selectedTab === kSampleJsonTabId,
                   children: !sample2 ? /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV(NoContentsPanel, { text: "JSON not available" }, void 0, false, {
                     fileName: "/Users/charlesteague/Development/ukgovernmentbeis/inspect_ai/src/inspect_ai/_view/www/src/samples/SampleDisplay.tsx",
-                    lineNumber: 226,
+                    lineNumber: 238,
                     columnNumber: 13
                   }, void 0) : sample2.messages.length > 100 ? /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV(NoContentsPanel, { text: "JSON too large too display" }, void 0, false, {
                     fileName: "/Users/charlesteague/Development/ukgovernmentbeis/inspect_ai/src/inspect_ai/_view/www/src/samples/SampleDisplay.tsx",
-                    lineNumber: 228,
+                    lineNumber: 240,
                     columnNumber: 13
-                  }, void 0) : /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("div", { className: clsx(styles$I.padded, styles$I.fullWidth), children: /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV(
+                  }, void 0) : /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("div", { className: clsx(styles$H.padded, styles$H.fullWidth), children: /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV(
                     JSONPanel,
                     {
                       data: sample2,
@@ -75945,13 +76153,13 @@ ${events}
                     false,
                     {
                       fileName: "/Users/charlesteague/Development/ukgovernmentbeis/inspect_ai/src/inspect_ai/_view/www/src/samples/SampleDisplay.tsx",
-                      lineNumber: 231,
+                      lineNumber: 243,
                       columnNumber: 15
                     },
                     void 0
                   ) }, void 0, false, {
                     fileName: "/Users/charlesteague/Development/ukgovernmentbeis/inspect_ai/src/inspect_ai/_view/www/src/samples/SampleDisplay.tsx",
-                    lineNumber: 230,
+                    lineNumber: 242,
                     columnNumber: 13
                   }, void 0)
                 },
@@ -75959,7 +76167,7 @@ ${events}
                 false,
                 {
                   fileName: "/Users/charlesteague/Development/ukgovernmentbeis/inspect_ai/src/inspect_ai/_view/www/src/samples/SampleDisplay.tsx",
-                  lineNumber: 218,
+                  lineNumber: 230,
                   columnNumber: 9
                 },
                 void 0
@@ -75970,14 +76178,14 @@ ${events}
           true,
           {
             fileName: "/Users/charlesteague/Development/ukgovernmentbeis/inspect_ai/src/inspect_ai/_view/www/src/samples/SampleDisplay.tsx",
-            lineNumber: 110,
+            lineNumber: 125,
             columnNumber: 7
           },
           void 0
         )
       ] }, void 0, true, {
         fileName: "/Users/charlesteague/Development/ukgovernmentbeis/inspect_ai/src/inspect_ai/_view/www/src/samples/SampleDisplay.tsx",
-        lineNumber: 106,
+        lineNumber: 121,
         columnNumber: 5
       }, void 0);
     };
@@ -75991,31 +76199,31 @@ ${events}
           /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV(Card, { children: [
             /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV(CardHeader, { label: "Usage" }, void 0, false, {
               fileName: "/Users/charlesteague/Development/ukgovernmentbeis/inspect_ai/src/inspect_ai/_view/www/src/samples/SampleDisplay.tsx",
-              lineNumber: 253,
+              lineNumber: 265,
               columnNumber: 9
             }, void 0),
             /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV(CardBody, { children: /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV(
               ModelTokenTable,
               {
                 model_usage: sample2.model_usage,
-                className: clsx(styles$I.noTop)
+                className: clsx(styles$H.noTop)
               },
               void 0,
               false,
               {
                 fileName: "/Users/charlesteague/Development/ukgovernmentbeis/inspect_ai/src/inspect_ai/_view/www/src/samples/SampleDisplay.tsx",
-                lineNumber: 255,
+                lineNumber: 267,
                 columnNumber: 11
               },
               void 0
             ) }, void 0, false, {
               fileName: "/Users/charlesteague/Development/ukgovernmentbeis/inspect_ai/src/inspect_ai/_view/www/src/samples/SampleDisplay.tsx",
-              lineNumber: 254,
+              lineNumber: 266,
               columnNumber: 9
             }, void 0)
           ] }, `sample-usage-${id}`, true, {
             fileName: "/Users/charlesteague/Development/ukgovernmentbeis/inspect_ai/src/inspect_ai/_view/www/src/samples/SampleDisplay.tsx",
-            lineNumber: 252,
+            lineNumber: 264,
             columnNumber: 7
           }, void 0)
         );
@@ -76025,42 +76233,42 @@ ${events}
           /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV(Card, { children: [
             /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV(CardHeader, { label: "Time" }, void 0, false, {
               fileName: "/Users/charlesteague/Development/ukgovernmentbeis/inspect_ai/src/inspect_ai/_view/www/src/samples/SampleDisplay.tsx",
-              lineNumber: 272,
+              lineNumber: 284,
               columnNumber: 9
             }, void 0),
-            /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV(CardBody, { children: /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("div", { className: clsx(styles$I.timePanel, "text-size-smaller"), children: [
+            /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV(CardBody, { children: /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("div", { className: clsx(styles$H.timePanel, "text-size-smaller"), children: [
               /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("div", { className: clsx("text-style-label", "text-style-secondary"), children: "Working" }, void 0, false, {
                 fileName: "/Users/charlesteague/Development/ukgovernmentbeis/inspect_ai/src/inspect_ai/_view/www/src/samples/SampleDisplay.tsx",
-                lineNumber: 275,
+                lineNumber: 287,
                 columnNumber: 13
               }, void 0),
               /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("div", { children: formatTime$1(sample2.working_time) }, void 0, false, {
                 fileName: "/Users/charlesteague/Development/ukgovernmentbeis/inspect_ai/src/inspect_ai/_view/www/src/samples/SampleDisplay.tsx",
-                lineNumber: 278,
+                lineNumber: 290,
                 columnNumber: 13
               }, void 0),
               /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("div", { className: clsx("text-style-label", "text-style-secondary"), children: "Total" }, void 0, false, {
                 fileName: "/Users/charlesteague/Development/ukgovernmentbeis/inspect_ai/src/inspect_ai/_view/www/src/samples/SampleDisplay.tsx",
-                lineNumber: 279,
+                lineNumber: 291,
                 columnNumber: 13
               }, void 0),
               /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("div", { children: formatTime$1(sample2.total_time) }, void 0, false, {
                 fileName: "/Users/charlesteague/Development/ukgovernmentbeis/inspect_ai/src/inspect_ai/_view/www/src/samples/SampleDisplay.tsx",
-                lineNumber: 282,
+                lineNumber: 294,
                 columnNumber: 13
               }, void 0)
             ] }, void 0, true, {
               fileName: "/Users/charlesteague/Development/ukgovernmentbeis/inspect_ai/src/inspect_ai/_view/www/src/samples/SampleDisplay.tsx",
-              lineNumber: 274,
+              lineNumber: 286,
               columnNumber: 11
             }, void 0) }, void 0, false, {
               fileName: "/Users/charlesteague/Development/ukgovernmentbeis/inspect_ai/src/inspect_ai/_view/www/src/samples/SampleDisplay.tsx",
-              lineNumber: 273,
+              lineNumber: 285,
               columnNumber: 9
             }, void 0)
           ] }, `sample-time-${id}`, true, {
             fileName: "/Users/charlesteague/Development/ukgovernmentbeis/inspect_ai/src/inspect_ai/_view/www/src/samples/SampleDisplay.tsx",
-            lineNumber: 271,
+            lineNumber: 283,
             columnNumber: 7
           }, void 0)
         );
@@ -76070,7 +76278,7 @@ ${events}
           /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV(Card, { children: [
             /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV(CardHeader, { label: "Metadata" }, void 0, false, {
               fileName: "/Users/charlesteague/Development/ukgovernmentbeis/inspect_ai/src/inspect_ai/_view/www/src/samples/SampleDisplay.tsx",
-              lineNumber: 292,
+              lineNumber: 304,
               columnNumber: 9
             }, void 0),
             /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV(CardBody, { children: /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV(
@@ -76078,24 +76286,24 @@ ${events}
               {
                 id: "task-sample-metadata-${id}",
                 entries: sample2 == null ? void 0 : sample2.metadata,
-                className: clsx("tab-pane", styles$I.noTop)
+                className: clsx("tab-pane", styles$H.noTop)
               },
               void 0,
               false,
               {
                 fileName: "/Users/charlesteague/Development/ukgovernmentbeis/inspect_ai/src/inspect_ai/_view/www/src/samples/SampleDisplay.tsx",
-                lineNumber: 294,
+                lineNumber: 306,
                 columnNumber: 11
               },
               void 0
             ) }, void 0, false, {
               fileName: "/Users/charlesteague/Development/ukgovernmentbeis/inspect_ai/src/inspect_ai/_view/www/src/samples/SampleDisplay.tsx",
-              lineNumber: 293,
+              lineNumber: 305,
               columnNumber: 9
             }, void 0)
           ] }, `sample-metadata-${id}`, true, {
             fileName: "/Users/charlesteague/Development/ukgovernmentbeis/inspect_ai/src/inspect_ai/_view/www/src/samples/SampleDisplay.tsx",
-            lineNumber: 291,
+            lineNumber: 303,
             columnNumber: 7
           }, void 0)
         );
@@ -76105,7 +76313,7 @@ ${events}
           /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV(Card, { children: [
             /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV(CardHeader, { label: "Store" }, void 0, false, {
               fileName: "/Users/charlesteague/Development/ukgovernmentbeis/inspect_ai/src/inspect_ai/_view/www/src/samples/SampleDisplay.tsx",
-              lineNumber: 307,
+              lineNumber: 319,
               columnNumber: 9
             }, void 0),
             /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV(CardBody, { children: /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV(
@@ -76113,24 +76321,24 @@ ${events}
               {
                 id: "task-sample-store-${id}",
                 entries: sample2 == null ? void 0 : sample2.store,
-                className: clsx("tab-pane", styles$I.noTop)
+                className: clsx("tab-pane", styles$H.noTop)
               },
               void 0,
               false,
               {
                 fileName: "/Users/charlesteague/Development/ukgovernmentbeis/inspect_ai/src/inspect_ai/_view/www/src/samples/SampleDisplay.tsx",
-                lineNumber: 309,
+                lineNumber: 321,
                 columnNumber: 11
               },
               void 0
             ) }, void 0, false, {
               fileName: "/Users/charlesteague/Development/ukgovernmentbeis/inspect_ai/src/inspect_ai/_view/www/src/samples/SampleDisplay.tsx",
-              lineNumber: 308,
+              lineNumber: 320,
               columnNumber: 9
             }, void 0)
           ] }, `sample-store-${id}`, true, {
             fileName: "/Users/charlesteague/Development/ukgovernmentbeis/inspect_ai/src/inspect_ai/_view/www/src/samples/SampleDisplay.tsx",
-            lineNumber: 306,
+            lineNumber: 318,
             columnNumber: 7
           }, void 0)
         );
@@ -76203,11 +76411,11 @@ ${events}
       }
       return false;
     };
-    const container$7 = "_container_kgsc6_1";
+    const container$6 = "_container_kgsc6_1";
     const body$2 = "_body_kgsc6_7";
     const scroller = "_scroller_kgsc6_11";
-    const styles$m = {
-      container: container$7,
+    const styles$l = {
+      container: container$6,
       body: body$2,
       scroller
     };
@@ -76238,7 +76446,7 @@ ${events}
         (_f = sampleData.sample) == null ? void 0 : _f.epoch
       ]);
       const scrollRef = reactExports.useRef(null);
-      return /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("div", { className: styles$m.container, children: [
+      return /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("div", { className: styles$l.container, children: [
         /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV(
           ProgressBar,
           {
@@ -76253,7 +76461,7 @@ ${events}
           },
           void 0
         ),
-        /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("div", { className: clsx(styles$m.scroller), ref: scrollRef, children: /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("div", { className: styles$m.body, children: sampleData.error ? /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV(
+        /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("div", { className: clsx(styles$l.scroller), ref: scrollRef, children: /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("div", { className: styles$l.body, children: sampleData.error ? /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV(
           ErrorPanel,
           {
             title: "Unable to load sample",
@@ -76310,7 +76518,7 @@ ${events}
     const content = "_content_yj2nt_41";
     const header$1 = "_header_yj2nt_45";
     const titleTool = "_titleTool_yj2nt_50";
-    const styles$l = {
+    const styles$k = {
       title,
       detail,
       detailText,
@@ -76348,8 +76556,8 @@ ${events}
           id,
           className: clsx(
             "modal",
-            styles$l.modal,
-            !visible2 ? styles$l.hidden : void 0
+            styles$k.modal,
+            !visible2 ? styles$k.hidden : void 0
           ),
           role: "dialog",
           onKeyUp: onkeyup,
@@ -76360,15 +76568,15 @@ ${events}
               className: clsx(
                 "modal-dialog",
                 "modal-dialog-scrollable",
-                styles$l.modalBody
+                styles$k.modalBody
               ),
               role: "document",
-              children: /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("div", { className: clsx("modal-content", styles$l.content), children: [
-                /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("div", { className: clsx("modal-header", styles$l.header), children: [
+              children: /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("div", { className: clsx("modal-content", styles$k.content), children: [
+                /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("div", { className: clsx("modal-header", styles$k.header), children: [
                   /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV(
                     "div",
                     {
-                      className: clsx("modal-title", "text-size-smaller", styles$l.title),
+                      className: clsx("modal-title", "text-size-smaller", styles$k.title),
                       children: title2 || ""
                     },
                     void 0,
@@ -76380,7 +76588,7 @@ ${events}
                     },
                     void 0
                   ),
-                  detail2 ? /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("div", { className: styles$l.detail, children: [
+                  detail2 ? /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("div", { className: styles$k.detail, children: [
                     (detailTools == null ? void 0 : detailTools.left) ? detailTools.left.map((tool2, idx) => {
                       return /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV(TitleTool, { ...tool2 }, `tool-left-${idx}`, false, {
                         fileName: "/Users/charlesteague/Development/ukgovernmentbeis/inspect_ai/src/inspect_ai/_view/www/src/components/LargeModal.tsx",
@@ -76388,7 +76596,7 @@ ${events}
                         columnNumber: 30
                       }, void 0);
                     }) : "",
-                    /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("div", { className: clsx("text-size-smaller", styles$l.detailText), children: /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("div", { children: detail2 }, void 0, false, {
+                    /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("div", { className: clsx("text-size-smaller", styles$k.detailText), children: /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("div", { children: detail2 }, void 0, false, {
                       fileName: "/Users/charlesteague/Development/ukgovernmentbeis/inspect_ai/src/inspect_ai/_view/www/src/components/LargeModal.tsx",
                       lineNumber: 94,
                       columnNumber: 19
@@ -76417,7 +76625,7 @@ ${events}
                         "btn",
                         "btn-close-large-dialog",
                         "text-size-larger",
-                        styles$l.close
+                        styles$k.close
                       ),
                       onClick: onHide,
                       "aria-label": "Close",
@@ -76492,7 +76700,7 @@ ${events}
             "btn",
             "btn-outline",
             "text-size-small",
-            styles$l.titleTool
+            styles$k.titleTool
           ),
           "aria-label": label2,
           onClick,
@@ -76677,50 +76885,6 @@ ${events}
       ] }, void 0, true, {
         fileName: "/Users/charlesteague/Development/ukgovernmentbeis/inspect_ai/src/inspect_ai/_view/www/src/components/MessageBand.tsx",
         lineNumber: 33,
-        columnNumber: 5
-      }, void 0);
-    };
-    const container$6 = "_container_e3c4f_2";
-    const dotsContainer = "_dotsContainer_e3c4f_8";
-    const dot = "_dot_e3c4f_8";
-    const pulse = "_pulse_e3c4f_1";
-    const visuallyHidden = "_visuallyHidden_e3c4f_25";
-    const styles$k = {
-      container: container$6,
-      dotsContainer,
-      dot,
-      pulse,
-      visuallyHidden
-    };
-    const PulsingDots = ({ text: text2 = "Loading...", dotsCount = 3 }) => {
-      return /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("div", { className: styles$k.container, role: "status", children: [
-        /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("div", { className: styles$k.dotsContainer, children: [...Array(dotsCount)].map((_, index) => /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV(
-          "div",
-          {
-            className: styles$k.dot,
-            style: { animationDelay: `${index * 0.15}s` }
-          },
-          index,
-          false,
-          {
-            fileName: "/Users/charlesteague/Development/ukgovernmentbeis/inspect_ai/src/inspect_ai/_view/www/src/components/PulsingDots.tsx",
-            lineNumber: 8,
-            columnNumber: 11
-          },
-          void 0
-        )) }, void 0, false, {
-          fileName: "/Users/charlesteague/Development/ukgovernmentbeis/inspect_ai/src/inspect_ai/_view/www/src/components/PulsingDots.tsx",
-          lineNumber: 6,
-          columnNumber: 7
-        }, void 0),
-        /* @__PURE__ */ jsxDevRuntimeExports.jsxDEV("span", { className: styles$k.visuallyHidden, children: text2 }, void 0, false, {
-          fileName: "/Users/charlesteague/Development/ukgovernmentbeis/inspect_ai/src/inspect_ai/_view/www/src/components/PulsingDots.tsx",
-          lineNumber: 15,
-          columnNumber: 7
-        }, void 0)
-      ] }, void 0, true, {
-        fileName: "/Users/charlesteague/Development/ukgovernmentbeis/inspect_ai/src/inspect_ai/_view/www/src/components/PulsingDots.tsx",
-        lineNumber: 5,
         columnNumber: 5
       }, void 0);
     };
